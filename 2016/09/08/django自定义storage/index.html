@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>django自定义storage | 聘宝研发</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近遇到了这样的一个问题，由于某些原因，需要把静态文件放到cdn上，之前使用的是django默认的storage（FileSystemStorage）。于是这里需要自定义storage。第一次写storage，过程中遇到一些坑，记录下来。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="django自定义storage">
+<meta property="og:url" content="http://hopperclouds.github.io/2016/09/08/django自定义storage/index.html">
+<meta property="og:site_name" content="聘宝研发">
+<meta property="og:description" content="最近遇到了这样的一个问题，由于某些原因，需要把静态文件放到cdn上，之前使用的是django默认的storage（FileSystemStorage）。于是这里需要自定义storage。第一次写storage，过程中遇到一些坑，记录下来。">
+<meta property="og:updated_time" content="2016-09-08T11:31:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="django自定义storage">
+<meta name="twitter:description" content="最近遇到了这样的一个问题，由于某些原因，需要把静态文件放到cdn上，之前使用的是django默认的storage（FileSystemStorage）。于是这里需要自定义storage。第一次写storage，过程中遇到一些坑，记录下来。">
+  
+    <link rel="alternative" href="/atom.xml" title="聘宝研发" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">聘宝研发</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一群有追求的人</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="hopperclouds.github.io">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="outer">
+      <section id="main"><article id="post-django自定义storage" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/08/django自定义storage/" class="article-date">
+  <time datetime="2016-09-08T11:31:22.000Z" itemprop="datePublished">2016-09-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/django/">django</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      django自定义storage
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近遇到了这样的一个问题，由于某些原因，需要把静态文件放到cdn上，之前使用的是django默认的storage（FileSystemStorage）。于是这里需要自定义storage。<br>第一次写storage，过程中遇到一些坑，记录下来。<br><a id="more"></a></p>
+<h2 id="什么是storage"><a href="#什么是storage" class="headerlink" title="什么是storage"></a>什么是storage</h2><p>其实这个玩意要我说明白，好像有点难，于是我就按我的方法说，如果有错，谢谢指正！<br>首先，我们的web中使用了许多的模版文件，静态文件，如js,css，图片这些，我们在配置服务器的时候，让nginx对请求进行分发，将动态请求分发给uWSGI，将静态文件交由nginx处理，这里nginx将从文件系统中读取静态资源，这里的文件系统就是我们当前的storage。<br>但是这里我们是想用cdn，于是我们这里的静态资源不在从服务器上加载，而是从我们的cdn服务提供商那里加载，这里我们又有一个问题了，cdn服务提供商怎么给出正确的资源，于是我们就需要自己来写一个storage，将原来的文件系统更换为cdn提供商的空间。</p>
+<h2 id="storage的结构和重写"><a href="#storage的结构和重写" class="headerlink" title="storage的结构和重写"></a>storage的结构和重写</h2><p>这里就需要参考django的官方文档了(<a href="https://docs.djangoproject.com/en/1.9/howto/custom-file-storage/" target="_blank" rel="external">原版</a>,<a href="http://python.usyiyi.cn/django/howto/custom-file-storage.html" target="_blank" rel="external">翻译版</a>)，由于我的外语水平不是很好，做的时候为了图效率，就没有花时间去琢磨英文官方文档，所以这里给一个翻译的文档地址，当然，如果你能很快看明白官方的文档，那去读原版是更好的选择。<br>首先，我们看文件系统的基类，其源码位于<code>django/core/files/storage.py</code>文件下。这里我就不贴它的代码了，如果需要查看结构，请自行到该文件下查看！<br>从文档中，我们可以了解的一些东西，这个类的子类需要不带参数实例化，于是我们需要在settings中加入自定义的参数。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">STATICFILES_STORAGE = <span class="string">'project.storage.CustomStorage'</span></div><div class="line">CUSTOM_STORAGE_OPTIONS = &#123;</div><div class="line">    <span class="string">'AccessKeyId'</span>: <span class="string">'your_accesskeyid'</span>,</div><div class="line">    <span class="string">'AccessKeySecret'</span>: <span class="string">'your_accesskeyidsecret'</span>,</div><div class="line">    <span class="string">'endpoint'</span>: <span class="string">'oss-cn-hangzhou.aliyuncs.com'</span>,</div><div class="line">    <span class="string">'oss_url'</span>: <span class="string">'http://oss-cn-hangzhou.aliyuncs.com'</span>,</div><div class="line">    <span class="string">'bucketname'</span>: <span class="string">'your_bucketname'</span>,</div><div class="line">&#125;</div><div class="line"></div><div class="line">COMPRESS_STORAGE = <span class="string">'project.storage.CustomCompressorFileStorage'</span></div><div class="line">STATIC_URL = <span class="string">'your_cdn_prefix_address'</span></div></pre></td></tr></table></figure></p>
+<p>参数说明：</p>
+<ul>
+<li>这里我们指定了STATICFILES_STORAGE为我们自定义的CustomStorage,如果不指定，那么系统将会使用默认的FileSystemStorage</li>
+<li>CUSTOM_STORAGE_OPTIONS是一个你自定义的Storage初始化参数，这里我用字典来初始化，当然，你可以使用你觉得合理的任何数据类型。</li>
+<li>COMPRESS_STORAGE是我们指定的压缩文件的存放位置，与STATICFILES_STORAGE同理。</li>
+<li>STATIC_URL这个就是静态文件的路由前缀，例如你的文件系统中路径是’aa/bb.js’，你的cdn地址是’static.cdn.com’，这里就使用cdn地址作为你的STATIC_URL</li>
+</ul>
+<p>从文档中，我们可以知道，自定义的storage，必须实现_open,_save两个方法，我们参考源码可以知道，这两个方法分别被save和open两个方法调用，而这两个方法的作用分别是‘打开文件，读取内容’、‘将文件保存到指定的位置’，由此，我们需要自己定义的存储就在这里来实现。<br>由于这里我采用的是阿里云的oss，所以认证的过程，我们放在构造函数中完成，本着<code>D.R.Y</code>的原则，为了让多个自定义的storage可以使用，我们将它放在外部，只在构造函数里来使用它。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">authticate</span><span class="params">(option)</span>:</span></div><div class="line">    auth = oss2.Auth(</div><div class="line">        option.get(<span class="string">'AccessKeyId'</span>),</div><div class="line">        option.get(<span class="string">'AccessKeySecret'</span>)</div><div class="line">    )</div><div class="line">    service = oss2.Service(</div><div class="line">        auth,</div><div class="line">        option.get(<span class="string">'endpoint'</span>)</div><div class="line">    )</div><div class="line">    bucket = oss2.Bucket(</div><div class="line">        auth,</div><div class="line">        option.get(<span class="string">'oss_url'</span>),</div><div class="line">        option.get(<span class="string">'bucketname'</span>)</div><div class="line">    )</div><div class="line"><span class="keyword">return</span> (auth, service, bucket)</div></pre></td></tr></table></figure></p>
+<p>认证过后，就可以重写save过程了。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_save</span><span class="params">(self, name, content)</span>:</span></div><div class="line">    self.bucket.put_object(</div><div class="line">        name,</div><div class="line">        content</div><div class="line">    )</div><div class="line">    <span class="keyword">return</span> name</div></pre></td></tr></table></figure></p>
+<p>这里我们使用的是阿里云的oss，它的save就这么简单。文档可以直接google阿里云oss！这里就不贴出来了！<br>哈哈，这里是不是很简单！其实理解了它的各个方法，真的很简单…………<br>继续，由于open方法是打开本地文件系统的文件，我们就不重写它了。<br>其他的方法。文档中说到，delete()，exists()，listdir()，size()，url() 这几个方法都需要被覆写，不然就会抛出NotImplementedError异常。<br>这里我们通过源码可以解释一下，这些玩意在干嘛。</p>
+<ul>
+<li>delete方法：顾名思义，就是删除，此方法被调用时，从storage中删除文件</li>
+<li>exists方法：额，还是顾名思义，就是判断是否存在该文件，返回布尔值</li>
+<li>listdir方法：返回文件列表</li>
+<li>size方法：返回文件大小</li>
+<li>url方法：这个方法需要提一下，我在之前重写的时候，直接pass了，所以，我在打开xadmin时，就会一直报错，于是我就找了很久的原因，我在这个函数中下了断点，最后发现，这个函数是必须自己重新写的（如果你的文件是静态文件，可以通过url访问的话）。因为如果不重写它，返回的是一个None，于是该文件就没有url可以访问，在某些需要判断的地方，也会报错！</li>
+</ul>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>不同的云服务提供商的上传方式可能不一样，但是原理都是一样的，重写save方法，改为上传到云端，重写需要使用的方法。最后collectstatic,compress即可。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://hopperclouds.github.io/2016/09/08/django自定义storage/" data-id="cisu9i8be0005zasqhp69enl6" class="article-share-link" data-share="baidu" data-title="django自定义storage">分享到</a>
+      
+
+      
+        <a href="http://hopperclouds.github.io/2016/09/08/django自定义storage/#disqus_thread" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/django/">django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/08/openvpn/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/06/react入门介绍/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">react入门介绍</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/django/">django</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/招聘/">招聘</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/搜索引擎/">搜索引擎</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kxrr/">Kxrr</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache-lucene/">apache lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/">django</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyspark/">pyspark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/str/">str</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unicode-literals/">unicode_literals</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/其他/">其他</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/招聘/">招聘</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索引擎/">搜索引擎</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/经验总结/">经验总结</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运维/">运维</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Kxrr/" style="font-size: 10px;">Kxrr</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/apache-lucene/" style="font-size: 10px;">apache lucene</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/pyspark/" style="font-size: 10px;">pyspark</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/str/" style="font-size: 10px;">str</a> <a href="/tags/unicode-literals/" style="font-size: 10px;">unicode_literals</a> <a href="/tags/其他/" style="font-size: 10px;">其他</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/技术/" style="font-size: 10px;">技术</a> <a href="/tags/招聘/" style="font-size: 10px;">招聘</a> <a href="/tags/搜索引擎/" style="font-size: 10px;">搜索引擎</a> <a href="/tags/经验总结/" style="font-size: 10px;">经验总结</a> <a href="/tags/运维/" style="font-size: 10px;">运维</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/08/openvpn/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/08/django自定义storage/">django自定义storage</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/06/react入门介绍/">react入门介绍</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/02/Python-Web并发重复数据防守策略/">Python-Web并发重复数据防守策略</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/02/JavaScript之递归/">JavaScript之递归</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="" target="_blank">聘宝产品</a>
+          </li>
+        
+          <li>
+            <a href="" target="_blank">runforever github</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 聘宝研发<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'hopperclouds';
+  
+  var disqus_url = 'http://hopperclouds.github.io/2016/09/08/django自定义storage/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

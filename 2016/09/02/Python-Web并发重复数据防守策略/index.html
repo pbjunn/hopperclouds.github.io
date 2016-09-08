@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Python-Web并发重复数据防守策略 | 聘宝研发</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="作者：jackie
+1.重复数据提交原因
+恶意用户脚本攻击
+web页面按钮卡顿重复点击引起
+
+2.服务器优化方向
+web服务器层防御，如nginx可以限制单一IP每秒钟的访问次数
+应用层防御，通过web应用程序进行控制
+数据层防御
+
+3.常规防冲击
+nginx 配置 –访问速率控制12345server &amp;#123;        ...        location /download/ &amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python-Web并发重复数据防守策略">
+<meta property="og:url" content="http://hopperclouds.github.io/2016/09/02/Python-Web并发重复数据防守策略/index.html">
+<meta property="og:site_name" content="聘宝研发">
+<meta property="og:description" content="作者：jackie
+1.重复数据提交原因
+恶意用户脚本攻击
+web页面按钮卡顿重复点击引起
+
+2.服务器优化方向
+web服务器层防御，如nginx可以限制单一IP每秒钟的访问次数
+应用层防御，通过web应用程序进行控制
+数据层防御
+
+3.常规防冲击
+nginx 配置 –访问速率控制12345server &amp;#123;        ...        location /download/ &amp;#">
+<meta property="og:updated_time" content="2016-09-08T11:31:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python-Web并发重复数据防守策略">
+<meta name="twitter:description" content="作者：jackie
+1.重复数据提交原因
+恶意用户脚本攻击
+web页面按钮卡顿重复点击引起
+
+2.服务器优化方向
+web服务器层防御，如nginx可以限制单一IP每秒钟的访问次数
+应用层防御，通过web应用程序进行控制
+数据层防御
+
+3.常规防冲击
+nginx 配置 –访问速率控制12345server &amp;#123;        ...        location /download/ &amp;#">
+  
+    <link rel="alternative" href="/atom.xml" title="聘宝研发" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">聘宝研发</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一群有追求的人</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="hopperclouds.github.io">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="outer">
+      <section id="main"><article id="post-Python-Web并发重复数据防守策略" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/02/Python-Web并发重复数据防守策略/" class="article-date">
+  <time datetime="2016-09-02T09:51:45.000Z" itemprop="datePublished">2016-09-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Python-Web并发重复数据防守策略
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>作者：jackie</p>
+<h2 id="1-重复数据提交原因"><a href="#1-重复数据提交原因" class="headerlink" title="1.重复数据提交原因"></a>1.重复数据提交原因</h2><ul>
+<li>恶意用户脚本攻击</li>
+<li>web页面按钮卡顿重复点击引起</li>
+</ul>
+<h2 id="2-服务器优化方向"><a href="#2-服务器优化方向" class="headerlink" title="2.服务器优化方向"></a>2.服务器优化方向</h2><ul>
+<li>web服务器层防御，如nginx可以限制单一IP每秒钟的访问次数</li>
+<li>应用层防御，通过web应用程序进行控制</li>
+<li>数据层防御</li>
+</ul>
+<h2 id="3-常规防冲击"><a href="#3-常规防冲击" class="headerlink" title="3.常规防冲击"></a>3.常规防冲击</h2><ul>
+<li>nginx 配置 –访问速率控制<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">        ...</div><div class="line">        location /download/ &#123;</div><div class="line">            limit_conn addr 100; #单一IP每秒钟最多访问100次</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在代理层防御主要应对于大规模高并发，例如有恶意用户高速率抓取本网站数据，导致网站服务性能下降时，<br>就需要进行IP访问速率限制；但是考虑到国内网络环境，基本绝大用户都是共享公共IP进行上网，所以此限制也并不是一定会打开。</p>
+<ul>
+<li>黑名单机制 –防恶意攻击<ul>
+<li>网络服务商控制，例如使用阿里云的可以通过阿里云的安全策略配置进行设置黑名单。</li>
+<li>服务器 本地防火墙策略</li>
+<li>web服务器 nginx配置黑名单</li>
+<li>web应用中通过缓存黑名单进行控制</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-异常访问带来的数据重复如何规避"><a href="#4-异常访问带来的数据重复如何规避" class="headerlink" title="4.异常访问带来的数据重复如何规避"></a>4.异常访问带来的数据重复如何规避</h2><ul>
+<li>数据表多字段进行联合唯一索引，通过数据库的限制进行脏数据的排除。 (推荐)</li>
+<li>数据库加锁，分悲观锁和乐观锁，具体概念不做讲述，一旦加了锁，也就给开发者自己加了锁，自己琢磨去吧。</li>
+<li>具体业务进行单一服务化，单实例进行处理，可通过MQ与主业务服务进行交互。（推荐）</li>
+</ul>
+<h2 id="5-具体的某个应用服务如何进行访问速率限制"><a href="#5-具体的某个应用服务如何进行访问速率限制" class="headerlink" title="5.具体的某个应用服务如何进行访问速率限制"></a>5.具体的某个应用服务如何进行访问速率限制</h2><ul>
+<li>直接上代码了，通过redis的原子操作机制设定计数器，也可称为限速器。<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">limit_api_call</span><span class="params">(key, limit, timeout)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    API限速器</div><div class="line">    :param key:</div><div class="line">    :param limit:限制次数</div><div class="line">    :param timeout: 单位时间</div><div class="line">    :return: True or False</div><div class="line">    """</div><div class="line">    lua_incr = <span class="string">"""</span></div><div class="line">        local current</div><div class="line">        current = redis.call("incr",KEYS[1])</div><div class="line">        if tonumber(current) == 1 then</div><div class="line">            redis.call("expire",KEYS[1],ARGV[1])</div><div class="line">        end</div><div class="line">        return current</div><div class="line">    """</div><div class="line">    current = client.eval(lua_incr, <span class="number">1</span>, key, timeout)</div><div class="line">    current = int(current)</div><div class="line">    <span class="keyword">if</span> current &gt; limit:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Reids官方文档中也提供了其他几种实现方式，但是除了是用lua脚本原子操作进行辅助，其他都只能概率限制，无法准确限速。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://hopperclouds.github.io/2016/09/02/Python-Web并发重复数据防守策略/" data-id="cisu9i8b50001zasqfpkcrjdq" class="article-share-link" data-share="baidu" data-title="Python-Web并发重复数据防守策略">分享到</a>
+      
+
+      
+        <a href="http://hopperclouds.github.io/2016/09/02/Python-Web并发重复数据防守策略/#disqus_thread" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/并发/">并发</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/06/react入门介绍/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          react入门介绍
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/02/JavaScript之递归/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">JavaScript之递归</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/django/">django</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/招聘/">招聘</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/搜索引擎/">搜索引擎</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kxrr/">Kxrr</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache-lucene/">apache lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/">django</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyspark/">pyspark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/str/">str</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unicode-literals/">unicode_literals</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/其他/">其他</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/招聘/">招聘</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索引擎/">搜索引擎</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/经验总结/">经验总结</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运维/">运维</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Kxrr/" style="font-size: 10px;">Kxrr</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/apache-lucene/" style="font-size: 10px;">apache lucene</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/pyspark/" style="font-size: 10px;">pyspark</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/str/" style="font-size: 10px;">str</a> <a href="/tags/unicode-literals/" style="font-size: 10px;">unicode_literals</a> <a href="/tags/其他/" style="font-size: 10px;">其他</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/技术/" style="font-size: 10px;">技术</a> <a href="/tags/招聘/" style="font-size: 10px;">招聘</a> <a href="/tags/搜索引擎/" style="font-size: 10px;">搜索引擎</a> <a href="/tags/经验总结/" style="font-size: 10px;">经验总结</a> <a href="/tags/运维/" style="font-size: 10px;">运维</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/08/openvpn/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/08/django自定义storage/">django自定义storage</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/06/react入门介绍/">react入门介绍</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/02/Python-Web并发重复数据防守策略/">Python-Web并发重复数据防守策略</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/02/JavaScript之递归/">JavaScript之递归</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="" target="_blank">聘宝产品</a>
+          </li>
+        
+          <li>
+            <a href="" target="_blank">runforever github</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 聘宝研发<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'hopperclouds';
+  
+  var disqus_url = 'http://hopperclouds.github.io/2016/09/02/Python-Web并发重复数据防守策略/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

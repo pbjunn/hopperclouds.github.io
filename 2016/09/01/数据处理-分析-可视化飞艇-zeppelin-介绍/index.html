@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>数据处理/分析/可视化飞艇(zeppelin)介绍 | 聘宝研发</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="author: likaiguo
+Zeppelin(飞艇)Zeppelin思维导图
+
+推荐查看思维导图中的各个链接,尤其是官方文档和中文翻译.
+快速搭建Zeppelin环境安装过程
+到官网下载二进制包（http://zeppelin.apache.org/download.html）
+解压到本地(保证已经设置好Java环境)
+
+运行Zeppelin服务bin/zeppelin-daemon.sh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据处理/分析/可视化飞艇(zeppelin)介绍">
+<meta property="og:url" content="http://hopperclouds.github.io/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/index.html">
+<meta property="og:site_name" content="聘宝研发">
+<meta property="og:description" content="author: likaiguo
+Zeppelin(飞艇)Zeppelin思维导图
+
+推荐查看思维导图中的各个链接,尤其是官方文档和中文翻译.
+快速搭建Zeppelin环境安装过程
+到官网下载二进制包（http://zeppelin.apache.org/download.html）
+解压到本地(保证已经设置好Java环境)
+
+运行Zeppelin服务bin/zeppelin-daemon.sh">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472665482681.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472668081493.png">
+<meta property="og:image" content="https://zeppelin.apache.org/assets/themes/zeppelin/img/available_interpreters.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472669411484.png">
+<meta property="og:image" content="https://zeppelin.apache.org/assets/themes/zeppelin/img/screenshots/pivot.png">
+<meta property="og:image" content="https://zeppelin.apache.org/assets/themes/zeppelin/img/screenshots/dynamicform.png">
+<meta property="og:image" content="http://img.blog.csdn.net/20150523163620563">
+<meta property="og:image" content="https://zeppelin.apache.org/assets/themes/zeppelin/img/screenshots/publish.png">
+<meta property="og:updated_time" content="2016-08-31T17:35:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据处理/分析/可视化飞艇(zeppelin)介绍">
+<meta name="twitter:description" content="author: likaiguo
+Zeppelin(飞艇)Zeppelin思维导图
+
+推荐查看思维导图中的各个链接,尤其是官方文档和中文翻译.
+快速搭建Zeppelin环境安装过程
+到官网下载二进制包（http://zeppelin.apache.org/download.html）
+解压到本地(保证已经设置好Java环境)
+
+运行Zeppelin服务bin/zeppelin-daemon.sh">
+<meta name="twitter:image" content="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472665482681.png">
+  
+    <link rel="alternative" href="/atom.xml" title="聘宝研发" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">聘宝研发</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一群有追求的人</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="hopperclouds.github.io">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="outer">
+      <section id="main"><article id="post-数据处理-分析-可视化飞艇-zeppelin-介绍" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/" class="article-date">
+  <time datetime="2016-08-31T17:35:55.000Z" itemprop="datePublished">2016-09-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/大数据/">大数据</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      数据处理/分析/可视化飞艇(zeppelin)介绍
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>author: likaiguo</p>
+<h1 id="Zeppelin-飞艇"><a href="#Zeppelin-飞艇" class="headerlink" title="Zeppelin(飞艇)"></a>Zeppelin(飞艇)</h1><p>Zeppelin思维导图</p>
+<p><img src="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472665482681.png" alt="2016/9/1/截图" title="blob_1472665482681.png"></p>
+<p>推荐查看思维导图中的各个链接,尤其是<a href="https://zeppelin.apache.org/docs/0.6.1/" target="_blank" rel="external">官方文档</a>和<a href="">中文翻译</a>.</p>
+<h2 id="快速搭建Zeppelin环境"><a href="#快速搭建Zeppelin环境" class="headerlink" title="快速搭建Zeppelin环境"></a>快速搭建Zeppelin环境</h2><h3 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h3><ul>
+<li>到官网下载二进制包（<a href="http://zeppelin.apache.org/download.html）" target="_blank" rel="external">http://zeppelin.apache.org/download.html）</a></li>
+<li>解压到本地(保证已经设置好Java环境)</li>
+</ul>
+<h3 id="运行Zeppelin服务"><a href="#运行Zeppelin服务" class="headerlink" title="运行Zeppelin服务"></a>运行Zeppelin服务</h3><p>bin/zeppelin-daemon.sh start|stop|restart</p>
+<p>浏览器中打开：<a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a> 即可进入Zeppelin首页。</p>
+<p><img src="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472668081493.png" alt="2016-9-1-截图" title="blob_1472668081493.png"></p>
+<h2 id="Zeppelin是什么"><a href="#Zeppelin是什么" class="headerlink" title="Zeppelin是什么?"></a>Zeppelin是什么?</h2><p>A web-based notebook that enables interactive data analytics.<br>You can make beautiful data-driven, interactive and collaborative documents with SQL, Scala and more.</p>
+<p>一款基于web页面的笔记本(类似ipython中的notebook),其提供<strong>交互式</strong>数据分析功能.<br>使用Zeppelin(飞艇)我们能使用如SQL,Scala等后端语言制作出数据驱动的,交互式的并且易于协作的文档.</p>
+<h2 id="Zeppelin基本概念"><a href="#Zeppelin基本概念" class="headerlink" title="Zeppelin基本概念"></a>Zeppelin基本概念</h2><h3 id="1-支持多种后端语言-Interpreter-解释器"><a href="#1-支持多种后端语言-Interpreter-解释器" class="headerlink" title="1.支持多种后端语言,Interpreter(解释器)"></a>1.支持多种后端语言,<a href="https://zeppelin.apache.org/docs/latest/manual/interpreters.html" target="_blank" rel="external">Interpreter(解释器)</a></h3><p><img src="https://zeppelin.apache.org/assets/themes/zeppelin/img/available_interpreters.png" alt="可以使用的解释器"></p>
+<p>抽象出解释器概念,运行各种语言和数据处理后端工具.在Zeppelin中解释器被设计为可插拔的模块.<br>目前支持各种各样的解释器,如上图所示包括Apache Spark, Python, JDBC, Markdown and Shell等等.</p>
+<p>同时也可以<a href="https://zeppelin.apache.org/docs/0.6.1/manual/interpreters.html" target="_blank" rel="external">写自己需要的解释器</a>.</p>
+<ol>
+<li>在现有的解释器的基础上配置对应的参数生成新的解释器</li>
+<li>写相关的Java或者scala程序开发更加特定的解释器[参考文献2]</li>
+</ol>
+<h3 id="2-强大的数据可视化能力"><a href="#2-强大的数据可视化能力" class="headerlink" title="2.强大的数据可视化能力"></a>2.强大的数据可视化能力</h3><p><img src="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472669411484.png" alt="2016/9/1/截图" title="blob_1472669411484.png"></p>
+<p>Zeppelin具有较为常用的数据可视化的图表. 如上图所示,表格,柱状图,饼图,趋势图,散点图一应俱全.</p>
+<p>数据可视化不仅限于Spark SQL,任意一种语言的表格输出都能被完美转译成对应的图表.</p>
+<p>并且能够导出对应的CSV等类型数据.</p>
+<h3 id="3-数据透视表"><a href="#3-数据透视表" class="headerlink" title="3.数据透视表"></a>3.数据透视表</h3><p><img src="https://zeppelin.apache.org/assets/themes/zeppelin/img/screenshots/pivot.png" alt=""><br>Apache Zeppelin aggregates values and displays them in pivot chart with simple drag and drop. You can easily create chart with multiple aggregated values including sum, count, average, min, max.</p>
+<p>飞艇能够在页面上通过简单的拖拽进行各种聚合操作,并且展示出对应的数据透视表.<br>同时也可以很容易通过求和,计数,平均,最小,最大创建各种聚合值的图表.</p>
+<h3 id="4-动态表格"><a href="#4-动态表格" class="headerlink" title="4.动态表格"></a>4.动态表格</h3><p><img src="https://zeppelin.apache.org/assets/themes/zeppelin/img/screenshots/dynamicform.png" alt=""><br>Zeppelin可以通过动态表格方式在notebook中添加诸如: 文本框,复选框,单选框等表单元素.<br>通过这种方式,我们可以快速进行对应的动态操作.</p>
+<p>典型应用:</p>
+<p><img src="http://img.blog.csdn.net/20150523163620563" alt=""></p>
+<p>这里${maxAge=30}的写法表示一个文本框元素,并且默认值为30。当修改对应的值是下方的图表会对应产生变化。</p>
+<p><a href="https://zeppelin.apache.org/docs/latest/manual/dynamicform.html" target="_blank" rel="external">https://zeppelin.apache.org/docs/latest/manual/dynamicform.html</a></p>
+<p>文档很重要.</p>
+<p>遇到一个奇怪的问题:<br>当使用下拉框时,对应的值可以实时变化. 其他如文本框,复选框都不实时变化,需要点击三角形run按钮才能生效.</p>
+<h3 id="5-将notebook共享给他人-更好的协作"><a href="#5-将notebook共享给他人-更好的协作" class="headerlink" title="5.将notebook共享给他人,更好的协作"></a>5.将notebook共享给他人,更好的协作</h3><p><img src="https://zeppelin.apache.org/assets/themes/zeppelin/img/screenshots/publish.png" alt=""></p>
+<ul>
+<li>可以直接将写好的notebook发送给其他人,放入工程的notebook目录下即可</li>
+<li>可以将生成的图表共享给他人(复制对应的link,参见文献2和官方文档)</li>
+</ul>
+<h2 id="Zeppelin使用场景-特点"><a href="#Zeppelin使用场景-特点" class="headerlink" title="Zeppelin使用场景(特点)?"></a>Zeppelin使用场景(特点)?</h2><p>apache zeppelin应该会很吸引分布式计算、数据分析从业者,是个值得把玩的算比较前卫的项目。</p>
+<ul>
+<li>代码量少，</li>
+<li>模块很清楚，</li>
+<li>可以尝试接入多种不同计算引擎，</li>
+<li>实时任务运行、可视化效果</li>
+<li>没有过多复杂的操作，只是区分了多个notebook，</li>
+<li>每个notebook里做单独的分析处理工作，流程和结果会被保存下来。</li>
+<li>此外，为spark做了更好的支持，比如默认是scala环境，默认sc已经创建好，即spark local可跑，默认spark sql有可视化效果。</li>
+<li>一站式数据分析: 文档,不同工具集一应俱全</li>
+</ul>
+<h2 id="Zeppelin怎样服务于我们的业务"><a href="#Zeppelin怎样服务于我们的业务" class="headerlink" title="Zeppelin怎样服务于我们的业务?"></a>Zeppelin怎样服务于我们的业务?</h2><ol>
+<li>应用于快速导入数据并且进行可视化</li>
+<li>将多种数据处理技术和语言融合在一起</li>
+<li>优美文档书写</li>
+<li>快速给客户提供数据可视化服务</li>
+</ol>
+<h2 id="Zeppelin常见问题"><a href="#Zeppelin常见问题" class="headerlink" title="Zeppelin常见问题"></a>Zeppelin常见问题</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="http://blog.csdn.net/laozhaokun/article/details/44803061" target="_blank" rel="external">Apache Zeppelin简介</a></li>
+<li><a href="http://blog.csdn.net/pelick/article/details/45934993" target="_blank" rel="external">Apache Zeppelin安装及介绍</a></li>
+<li><a href="http://www.flyml.net/2016/08/19/reinforce-spark-with-zeppelin-basic/" target="_blank" rel="external">让Spark如虎添翼的Zeppelin – 基础篇</a></li>
+<li><a href="http://www.flyml.net/2016/08/22/zeppelin-demo-mysql-data/" target="_blank" rel="external">Zeppelin 小试牛刀 – 使用Zeppelin展示MySQL的数据</a></li>
+<li><a href="http://www.cnblogs.com/smartloli/p/5148941.html" target="_blank" rel="external">Hadoop - Zeppelin 使用心得</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://hopperclouds.github.io/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/" data-id="cisu9i8bu000hzasqgmgw2bbv" class="article-share-link" data-share="baidu" data-title="数据处理/分析/可视化飞艇(zeppelin)介绍">分享到</a>
+      
+
+      
+        <a href="http://hopperclouds.github.io/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/#disqus_thread" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pyspark/">pyspark</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/02/JavaScript之递归/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          JavaScript之递归
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/31/认识Apache Lucene/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">认识Apache Lucene</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/django/">django</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/招聘/">招聘</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/搜索引擎/">搜索引擎</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kxrr/">Kxrr</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache-lucene/">apache lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/">django</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyspark/">pyspark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/str/">str</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unicode-literals/">unicode_literals</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/其他/">其他</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/招聘/">招聘</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索引擎/">搜索引擎</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/经验总结/">经验总结</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运维/">运维</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Kxrr/" style="font-size: 10px;">Kxrr</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/apache-lucene/" style="font-size: 10px;">apache lucene</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/pyspark/" style="font-size: 10px;">pyspark</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/str/" style="font-size: 10px;">str</a> <a href="/tags/unicode-literals/" style="font-size: 10px;">unicode_literals</a> <a href="/tags/其他/" style="font-size: 10px;">其他</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/技术/" style="font-size: 10px;">技术</a> <a href="/tags/招聘/" style="font-size: 10px;">招聘</a> <a href="/tags/搜索引擎/" style="font-size: 10px;">搜索引擎</a> <a href="/tags/经验总结/" style="font-size: 10px;">经验总结</a> <a href="/tags/运维/" style="font-size: 10px;">运维</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/08/openvpn/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/08/django自定义storage/">django自定义storage</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/06/react入门介绍/">react入门介绍</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/02/Python-Web并发重复数据防守策略/">Python-Web并发重复数据防守策略</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/02/JavaScript之递归/">JavaScript之递归</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="" target="_blank">聘宝产品</a>
+          </li>
+        
+          <li>
+            <a href="" target="_blank">runforever github</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 聘宝研发<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'hopperclouds';
+  
+  var disqus_url = 'http://hopperclouds.github.io/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
