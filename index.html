@@ -22,7 +22,7 @@
     <link rel="icon" href="/favicon.png">
   
   <link rel="stylesheet" href="/css/style.css">
-  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.1.0/css/font-awesome.min.css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
   <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 </head>
@@ -73,95 +73,107 @@
     <div class="outer">
       <section id="main">
   
-    <article id="post-openvpn" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Nodejs-ORM框架Sequelizejs快速入门" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/09/08/openvpn/" class="article-date">
-  <time datetime="2016-09-08T11:33:18.000Z" itemprop="datePublished">2016-09-08</time>
+    <a href="/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/" class="article-date">
+  <time datetime="2016-09-12T15:10:10.000Z" itemprop="datePublished">2016-09-12</time>
 </a>
     
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/">Nodejs ORM框架Sequelizejs快速入门</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>#OpenVPN服务部署使用<br>[TOC]</p>
-<p>##1 服务端部署（Ubuntu）</p>
-<p>###1.1 安装OpenVPN 所需插件<br><figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-<span class="built_in">get</span> install openssl</div><div class="line">$ sudo apt-<span class="built_in">get</span> install libssl-<span class="built_in">dev</span></div><div class="line">$ sudo apt-<span class="built_in">get</span> install libpam0g-<span class="built_in">dev</span></div><div class="line">$ sudo apt-<span class="built_in">get</span> install liblzo2-<span class="built_in">dev</span></div></pre></td></tr></table></figure></p>
-<p>###1.2 安装OpenVPN<br>注:以下安装方式任选一种,推荐apt-get方式安装</p>
-<p>####1.2.1 apt-get安装OpenVPN<br><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta"><span class="meta-keyword">$apt</span>-get install openvpn</span></div><div class="line"><span class="meta"><span class="meta-keyword">$cd</span> /etc/openvpn</span></div><div class="line"><span class="meta"><span class="meta-keyword">$mkdir</span> conf log</span></div></pre></td></tr></table></figure></p>
-<p>####1.2.2 源码安装OpenVPN（建议使用2.2.2版本）<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/swupdate.openvpn.org/community</span><span class="regexp">/releases/openvpn</span>-<span class="number">2.2</span>.<span class="number">2</span>.tar.gz  </div><div class="line"><span class="variable">$ </span>tar -zxvf openvpn-<span class="number">2.2</span>.<span class="number">2</span>.tar.gz  </div><div class="line"><span class="variable">$ </span>mkdir /data/openvpn &amp;&amp; cd openvpn-<span class="number">2.2</span>.<span class="number">2</span>  </div><div class="line"><span class="variable">$ </span>./configure --enable-password-save --prefix=<span class="regexp">/etc/openvpn</span>  </div><div class="line"><span class="variable">$ </span>make &amp;&amp; sudo make install</div></pre></td></tr></table></figure></p>
-<p>注：–enable-password-save该选项是避免手工输入客户端密码；–prefix选项是真正的安装路径</p>
-<p>###1.3 开启内核转发并配置源地址路由<br><figure class="highlight tcl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ echo <span class="string">"1"</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/ip_forward </div><div class="line">$<span class="title"> iptables</span> -t<span class="title"> nat</span> -A<span class="title"> POSTROUTING</span> -s 10.8.0.0/24 -o<span class="title"> eth0</span> -j<span class="title"> MASQUERADE</span></div></pre></td></tr></table></figure></p>
-<p>###1.4 服务端配置</p>
-<p>####1.4.1 生成密钥<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ cd openvpn<span class="number">-2.2</span><span class="number">.2</span>/easy-rsa/<span class="number">2.0</span> </div><div class="line">$ source ./vars     # 在此之前，可以修改vars文件对国家省份等修改;配置dh的位数(默认是<span class="number">1024</span>，可以改成export KEY_SIZE=<span class="number">2048</span>)和下文生成的dh2048.pem相对应</div><div class="line">$ ./clean-all </div><div class="line">$ ./build-ca </div><div class="line">$ ./build-<span class="type">key</span>-server server # 产生服务器证书，此处的server是文件名参数，可以任意修改。</div><div class="line">$ ./build-<span class="type">key</span>-pass client1 # 生成客户端<span class="type">key</span>，pass表示需要输入一个密码作为客户端启动时的凭证； ./build-<span class="type">key</span>则不需要输入密码</div><div class="line">$ ./build-dh # 产生Diffie Hellman参数</div><div class="line">至此一个客户端所需的证书已经完毕，都在easy-rsa/<span class="number">2.0</span>/keys文件夹下面，其中ca.crt server.crt server.csr server.<span class="type">key</span> dh1024.pem是服务端所需证书文件，ca.crt ca.<span class="type">key</span> client1.crt client1.csr client1.<span class="type">key</span>是客户端所需证书文件。</div><div class="line">注：可以继续使用./build-<span class="type">key</span>产生更多客户端证书,一个客户端证书只能同时用于一个客户端连接。</div></pre></td></tr></table></figure></p>
-<p>####1.4.2 服务端配目录及文件<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">cd</span> openvpn &amp;&amp; <span class="keyword">mkdir</span> <span class="keyword">conf</span> # openvpn就是第2步中openvpn的安装目录 </div><div class="line">$ cp openvpn-2.2.2/<span class="keyword">sample</span>-config-files/server.<span class="keyword">conf</span> <span class="keyword">conf</span>/</div><div class="line">$ cp openvpn-2.2.2/easy-rsa/2.0/keys/&#123;<span class="keyword">ca</span>.crt,server.crt,server.csr,server.key,dh1024.pem&#125; <span class="keyword">conf</span>/ # 拷贝openvpn-2.2.2/easy-rsa/2.0/keys/下的相关证书文件到openvpn/<span class="keyword">conf</span>/目录下，注意:2048位的key则是dh2048.pem; 1024位的key则是dh1024.pem</div></pre></td></tr></table></figure></p>
-<p>####1.4.3 服务端配置文件参数指定<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">vim</span> <span class="keyword">conf</span>/server.<span class="keyword">conf</span></div><div class="line">dev tap</div><div class="line">proto tcp</div><div class="line">port <span class="number">1194</span></div><div class="line"><span class="keyword">ca</span> /path/<span class="keyword">to</span>/openvpn/<span class="keyword">conf</span>/<span class="keyword">ca</span>.crt</div><div class="line">cert /path/<span class="keyword">to</span>/openvpn/<span class="keyword">conf</span>/server.crt</div><div class="line">key /path/<span class="keyword">to</span>/openvpn/<span class="keyword">conf</span>/server.key</div><div class="line">dh /path/<span class="keyword">to</span>/openvpn/<span class="keyword">conf</span>/dh1024.pem</div><div class="line">user nobody</div><div class="line">group nogroup</div><div class="line">server <span class="number">10.8</span>.<span class="number">0.0</span> <span class="number">255.255</span>.<span class="number">255.0</span>     # 分配给clinet的ip段</div><div class="line">second time period</div><div class="line">keepalive <span class="number">10</span> <span class="number">120</span>                            # 每<span class="number">10</span>秒ping一次，<span class="number">120</span>秒内客户端没有动作就断开连接</div><div class="line">persist-key</div><div class="line">persist-tun</div><div class="line"><span class="keyword">verb</span> <span class="number">4</span></div><div class="line"><span class="built_in">log</span>-<span class="keyword">append</span> /path/<span class="keyword">to</span>/openvpn/<span class="built_in">log</span>/openvpn.<span class="built_in">log</span></div><div class="line">status /path/<span class="keyword">to</span>/openvpn/<span class="built_in">log</span>/openvpn-status.<span class="built_in">log</span></div><div class="line">client-<span class="keyword">to</span>-client</div><div class="line">crl-verify /path/<span class="keyword">to</span>/openvpn/<span class="keyword">conf</span>/crl.pem            # 客户端证书连接限制</div><div class="line"><span class="keyword">comp</span>-lzo</div></pre></td></tr></table></figure></p>
-<p>###1.5 启动OpenVPN服务端<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo <span class="regexp">/path/</span>to<span class="regexp">/openvpn/</span>sbin<span class="regexp">/openvpn --config /</span>path<span class="regexp">/to/</span>openvpn<span class="regexp">/conf/</span>server.conf --daemon</div></pre></td></tr></table></figure></p>
-<p>###1.6 检查验证<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ifconfig|grep inet|grep <span class="number">10.8</span><span class="number">.0</span><span class="number">.1</span>  </div><div class="line">inet <span class="number">10.8</span><span class="number">.0</span><span class="number">.1</span> netmask <span class="number">0xffffff00</span> broadcast <span class="number">10.8</span><span class="number">.0</span><span class="number">.255</span></div></pre></td></tr></table></figure></p>
-<p>注：得到IP为：10.8.0.1 则说明VPN服务端配置成功  </p>
-<p>###1.7 设置OpenVPN服务端开机启动<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vim <span class="regexp">/etc/</span>rc.local</div><div class="line">iptables -t nat -A POSTROUTING -s <span class="number">10.8</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">24</span> -o eth0 -j MASQUERADE</div><div class="line"><span class="regexp">/path/</span>to<span class="regexp">/openvpn/</span>sbin<span class="regexp">/openvpn --config /</span>path<span class="regexp">/to/</span>openvpn<span class="regexp">/conf/</span>server.conf --daemon</div></pre></td></tr></table></figure></p>
-<p>##2 OpenVPN 客户端部署(MAC系统)  </p>
-<p>###2.1 安装OpenVPN 所需插件<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo <span class="keyword">brew </span><span class="keyword">install </span>openssl</div></pre></td></tr></table></figure></p>
-<p>###2.2 安装OpenVPN<br>注:以下安装方式任选一种,推荐Brew方式安装</p>
-<p>####2.2.1 Brew 安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">直接brew安装(推荐)</div><div class="line"><span class="variable">$brew</span> install openvpn</div><div class="line"><span class="variable">$cd</span> /usr/<span class="built_in">local</span>/Cellar/openvpn/2.3.11_1</div><div class="line"><span class="variable">$mkdir</span> conf <span class="built_in">log</span></div><div class="line"><span class="variable">$ln</span> <span class="_">-s</span> /usr/<span class="built_in">local</span>/Cellar/openvpn/2.3.11_1/sbin/openvpn /usr/<span class="built_in">local</span>/bin/openvpn</div></pre></td></tr></table></figure></p>
-<p>####2.2.2 源码安装（建议使用2.2.2版本）<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/swupdate.openvpn.org/community</span><span class="regexp">/releases/openvpn</span>-<span class="number">2.2</span>.<span class="number">2</span>.tar.gz  </div><div class="line"><span class="variable">$ </span>tar -zxvf openvpn-<span class="number">2.2</span>.<span class="number">2</span>.tar.gz  </div><div class="line"><span class="variable">$ </span>mkdir /data/openvpn &amp;&amp; cd openvpn-<span class="number">2.2</span>.<span class="number">2</span>  </div><div class="line"><span class="variable">$ </span>./configure --enable-password-save --prefix=<span class="regexp">/etc/openvpn</span>  </div><div class="line"><span class="variable">$ </span>make &amp;&amp; sudo make install</div></pre></td></tr></table></figure></p>
-<p>注：–enable-password-save该选项是避免手工输入客户端密码；–prefix选项是真正的安装路径</p>
-<p>###2.3 服务端生成客户端所需密钥(客户端部署可忽略此步骤) </p>
-<p>####2.3.1 服务端连接<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">服务端所在机器：xxx<span class="selector-class">.xxx</span><span class="selector-class">.xxx</span><span class="selector-class">.xxx</span>  </div><div class="line"><span class="variable">$ssh</span> root@xxx<span class="selector-class">.xxx</span><span class="selector-class">.xxx</span><span class="selector-class">.xxx</span>  #连接方式</div><div class="line"><span class="variable">$cd</span> /media/openvpn/  服务端所在路径</div><div class="line"><span class="variable">$cd</span> /media/openvpn-<span class="number">2.2</span>.<span class="number">2</span>/easy-rsa/<span class="number">2.0</span>  生成密钥所需路径</div></pre></td></tr></table></figure></p>
-<p>####2.3.2 生成密钥<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>source ./vars  </div><div class="line"><span class="variable">$ </span>./build-key-pass client-A    <span class="comment">#此处设置密码为：openvpn123</span></div></pre></td></tr></table></figure></p>
-<p>注：生成客户端key，pass表示需要输入一个密码作为客户端启动时的凭证； ./build-key则不需要输入密码<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>./build-dh</div></pre></td></tr></table></figure></p>
-<p>####2.3.3设置客户端密钥验证信息<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vim /media/openvpn/conf/ccd/client-A  </div><div class="line">ifconfig-push <span class="number">10.8</span><span class="number">.0</span><span class="number">.119</span> <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span></div></pre></td></tr></table></figure></p>
-<p>注：此处的验证信息文件名需要和生成密钥时输入的名字保持一致;<br>10.8.0.119 指客户端被虚拟出来的IP  </p>
-<p>###2.4 客户端配置  </p>
-<p>####2.4.1 拷贝密钥到客户端<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$scp root<span class="meta">@xxx</span>.xxx.xxx.<span class="string">xxx:</span><span class="regexp">/media/</span>openvpn<span class="number">-2.2</span><span class="number">.2</span><span class="regexp">/easy-rsa/</span><span class="number">2.0</span><span class="regexp">/keys/</span>&#123;ca.crt,ca.key,client-A.crt,client-A.csr,client-A.key&#125;   <span class="regexp">/usr/</span>local<span class="regexp">/Cellar/</span>openvpn<span class="regexp">/2.3.11_1/</span>conf/</div><div class="line">注:密钥可以由维护人员发放,联系刘东;</div></pre></td></tr></table></figure></p>
-<p>####2.4.2 配置客户端密码文件<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vim <span class="meta-keyword">/usr/</span>local/Cellar<span class="meta-keyword">/openvpn/</span><span class="number">2.3</span><span class="number">.11</span>_1<span class="meta-keyword">/conf/</span>password.txt  </div><div class="line">openvpn123</div></pre></td></tr></table></figure></p>
-<p>注:客户端密码文件和服务端生成密钥时输入的密码一致</p>
-<p>####2.4.3 客户端配置文件<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">$ vim /usr/local/Cellar/openvpn/<span class="number">2.3</span><span class="number">.11</span>_1/conf/client.conf  </div><div class="line">client  </div><div class="line">dev tap  </div><div class="line">proto tcp  </div><div class="line">remote xxx.xxx.xxx.xxx <span class="number">1194</span>   #指定服务端外网IP及端口</div><div class="line">nobind  </div><div class="line">user nobody  </div><div class="line">group nogroup  </div><div class="line">ca /usr/local/Cellar/openvpn/<span class="number">2.3</span><span class="number">.11</span>_1/conf/ca.crt  </div><div class="line">cert /usr/local/Cellar/openvpn/<span class="number">2.3</span><span class="number">.11</span>_1/conf/client-A.crt  </div><div class="line"><span class="type">key</span> /usr/local/Cellar/openvpn/<span class="number">2.3</span><span class="number">.11</span>_1/conf/client-A.<span class="type">key</span>  </div><div class="line">ping <span class="number">15</span>  </div><div class="line">ping-restart <span class="number">45</span>  </div><div class="line">ping-<span class="section">timer</span>-rem  </div><div class="line">persist-<span class="type">key</span>  </div><div class="line">persist-tun  </div><div class="line">ns-cert-type server  </div><div class="line">comp-lzo  </div><div class="line">verb <span class="number">4</span>  </div><div class="line">log-append /usr/local/Cellar/openvpn/<span class="number">2.3</span><span class="number">.11</span>_1/log/openvpn.log  </div><div class="line">status /usr/local/Cellar/openvpn/<span class="number">2.3</span><span class="number">.11</span>_1/log/openvpn-status.log  </div><div class="line">tcp-queue-limit <span class="number">4096</span> # <span class="number">256</span>  </div><div class="line">bcast-buffers <span class="number">4096</span></div></pre></td></tr></table></figure></p>
-<p>###2.5 启动客户端  </p>
-<p>####2.5.1 命令行启动OpenVPN<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>openvpn --config <span class="regexp">/usr/</span>local<span class="regexp">/Cellar/</span>openvpn<span class="regexp">/2.3.11_1/</span>conf<span class="regexp">/client.conf --askpass /u</span>sr<span class="regexp">/local/</span>Cellar<span class="regexp">/openvpn/</span><span class="number">2.3</span>.<span class="number">11</span>_1<span class="regexp">/conf/</span>password.txt --daemon</div></pre></td></tr></table></figure></p>
-<p>####2.5.2 GUI启动OpenVPN</p>
-<ul>
-<li>下载Tunnelblick客户端<br>直接官网下载: <a href="https://tunnelblick.net/downloads.html" target="_blank" rel="external">https://tunnelblick.net/downloads.html</a>    </li>
-<li>安装Tunnelblick客户端<br>Tunnelblick具体安装使用流程见：<a href="http://blog.csdn.net/sinat_25471067/article/details/43482837" target="_blank" rel="external">Mac系统Tunnelblick下载以及安装流程</a></li>
-</ul>
-<p>###2.6 检查验证<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ifconfig|grep inet|grep <span class="number">10.8</span><span class="number">.0</span><span class="number">.119</span>  </div><div class="line">inet <span class="number">10.8</span><span class="number">.0</span><span class="number">.119</span> netmask <span class="number">0xffffff00</span> broadcast <span class="number">10.8</span><span class="number">.0</span><span class="number">.255</span></div></pre></td></tr></table></figure></p>
-<p>注：得到IP为：10.8.0.x 则说明VPN客户端配置成功<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ping <span class="number">10.8</span><span class="number">.0</span><span class="number">.1</span>    #检查是否能ping通内网等机器</div></pre></td></tr></table></figure></p>
-<p>###2.7 服务加入开机自启动<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vim <span class="regexp">/etc/</span>rc.local</div><div class="line"><span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>openvpn --config <span class="regexp">/usr/</span>local<span class="regexp">/Cellar/</span>openvpn<span class="regexp">/2.3.11_1/</span>conf<span class="regexp">/client.conf --askpass /u</span>sr<span class="regexp">/local/</span>Cellar<span class="regexp">/openvpn/</span><span class="number">2.3</span>.<span class="number">11</span>_1<span class="regexp">/conf/</span>password.txt --daemon</div></pre></td></tr></table></figure></p>
-<p>##3 OpenVPN 客户端部署(Ubuntu系统)  </p>
-<p>###3.1 安装OpenVPN 所需插件<br><figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-<span class="built_in">get</span> install openssl</div><div class="line">$ sudo apt-<span class="built_in">get</span> install libssl-<span class="built_in">dev</span></div><div class="line">$ sudo apt-<span class="built_in">get</span> install libpam0g-<span class="built_in">dev</span></div><div class="line">$ sudo apt-<span class="built_in">get</span> install liblzo2-<span class="built_in">dev</span></div></pre></td></tr></table></figure></p>
-<p>###3.2 安装OpenVPN<br>注:以下安装方式任选一种,推荐apt-get方式安装</p>
-<p>####3.2.1 apt-get安装OpenVPN<br><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta"><span class="meta-keyword">$apt</span>-get install openvpn</span></div><div class="line"><span class="meta"><span class="meta-keyword">$cd</span> /etc/openvpn</span></div><div class="line"><span class="meta"><span class="meta-keyword">$mkdir</span> conf log</span></div></pre></td></tr></table></figure></p>
-<p>####3.2.2 源码安装OpenVPN（建议使用2.2.2版本）<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>wget <span class="symbol">http:</span>/<span class="regexp">/swupdate.openvpn.org/community</span><span class="regexp">/releases/openvpn</span>-<span class="number">2.2</span>.<span class="number">2</span>.tar.gz  </div><div class="line"><span class="variable">$ </span>tar -zxvf openvpn-<span class="number">2.2</span>.<span class="number">2</span>.tar.gz  </div><div class="line"><span class="variable">$ </span>mkdir /data/openvpn &amp;&amp; cd openvpn-<span class="number">2.2</span>.<span class="number">2</span>  </div><div class="line"><span class="variable">$ </span>./configure --enable-password-save --prefix=<span class="regexp">/etc/openvpn</span>  </div><div class="line"><span class="variable">$ </span>make &amp;&amp; sudo make install</div></pre></td></tr></table></figure></p>
-<p>注：–enable-password-save该选项是避免手工输入客户端密码；–prefix选项是真正的安装路径</p>
-<p>###3.3 服务端生成客户端所需密钥(客户端部署可忽略此步骤) </p>
-<p>####3.3.1 服务端连接<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">服务端所在机器：xxx<span class="selector-class">.xxx</span><span class="selector-class">.xxx</span><span class="selector-class">.xxx</span>  </div><div class="line"><span class="variable">$ssh</span> root@xxx<span class="selector-class">.xxx</span><span class="selector-class">.xxx</span><span class="selector-class">.xxx</span>  #连接方式</div><div class="line"><span class="variable">$cd</span> /media/openvpn/  服务端所在路径</div><div class="line"><span class="variable">$cd</span> /media/openvpn-<span class="number">2.2</span>.<span class="number">2</span>/easy-rsa/<span class="number">2.0</span>  生成密钥所需路径</div></pre></td></tr></table></figure></p>
-<p>####3.3.2 生成密钥<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>source ./vars  </div><div class="line"><span class="variable">$ </span>./build-key-pass client-B    <span class="comment">#此处设置密码为：openvpn123</span></div></pre></td></tr></table></figure></p>
-<p>注：生成客户端key，pass表示需要输入一个密码作为客户端启动时的凭证； ./build-key则不需要输入密码<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>./build-dh</div></pre></td></tr></table></figure></p>
-<p>####3.3.3设置客户端密钥验证信息<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vim /media/openvpn/conf/ccd/client-B  </div><div class="line">ifconfig-push <span class="number">10.8</span><span class="number">.0</span><span class="number">.120</span> <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span></div></pre></td></tr></table></figure></p>
-<p>注：此处的验证信息文件名需要和生成密钥时输入的名字保持一致;<br>10.8.0.120 指客户端被虚拟出来的IP  </p>
-<p>###3.4 客户端配置  </p>
-<p>####3.4.1 拷贝密钥到客户端<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$scp root<span class="meta">@xxx</span>.xxx.xxx.<span class="string">xxx:</span><span class="regexp">/media/</span>openvpn<span class="number">-2.2</span><span class="number">.2</span><span class="regexp">/easy-rsa/</span><span class="number">2.0</span><span class="regexp">/keys/</span>&#123;ca.crt,ca.key,client-B.crt,client-B.csr,client-B.key&#125;   <span class="regexp">/etc/</span>openvpn/conf</div><div class="line">注:密钥可以由维护人员发放,联系刘东;</div></pre></td></tr></table></figure></p>
-<p>####3.4.2 配置客户端密码文件<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vim <span class="regexp">/etc/</span>openvpn<span class="regexp">/conf/</span>password.txt  </div><div class="line">openvpn123</div></pre></td></tr></table></figure></p>
-<p>注:客户端密码文件和服务端生成密钥时输入的密码一致</p>
-<p>####3.4.3 客户端配置文件<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">vim</span> /etc/openvpn/<span class="keyword">conf</span>/client.<span class="keyword">conf</span>  </div><div class="line">client  </div><div class="line">dev tap  </div><div class="line">proto tcp  </div><div class="line">remote xxx.xxx.xxx.xxx <span class="number">1194</span>   #指定服务端外网IP及端口</div><div class="line"></div><div class="line">nobind  </div><div class="line">user nobody  </div><div class="line">group nogroup  </div><div class="line"><span class="keyword">ca</span> /etc/openvpn/<span class="keyword">conf</span>/<span class="keyword">ca</span>.crt  </div><div class="line">cert /etc/openvpn/<span class="keyword">conf</span>/client-B.crt  </div><div class="line">key /etc/openvpn/<span class="keyword">conf</span>/client-B.key  </div><div class="line"></div><div class="line">ping <span class="number">15</span>  </div><div class="line"></div><div class="line">ping-restart <span class="number">45</span>  </div><div class="line">ping-timer-rem  </div><div class="line">persist-key  </div><div class="line">persist-tun  </div><div class="line">ns-cert-<span class="built_in">type</span> server  </div><div class="line"><span class="keyword">comp</span>-lzo  </div><div class="line"></div><div class="line"><span class="keyword">verb</span> <span class="number">4</span>  </div><div class="line"><span class="built_in">log</span>-<span class="keyword">append</span> /etc/openvpn/<span class="built_in">log</span>/openvpn.<span class="built_in">log</span>  </div><div class="line">status /etc/openvpn/<span class="built_in">log</span>/openvpn-status.<span class="built_in">log</span>  </div><div class="line"></div><div class="line">tcp-queue-limit <span class="number">4096</span> # <span class="number">256</span>  </div><div class="line">bcast-<span class="keyword">buffers</span> <span class="number">4096</span></div></pre></td></tr></table></figure></p>
-<p>###3.5 启动客户端<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo openvpn --config <span class="regexp">/etc/</span>openvpn<span class="regexp">/conf/</span>client.conf --askpass <span class="regexp">/etc/</span>openvpn<span class="regexp">/conf/</span>password.txt --daemon</div></pre></td></tr></table></figure></p>
-<p>###3.6 检查验证<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ifconfig|grep inet|grep <span class="number">10.8</span><span class="number">.0</span><span class="number">.120</span>  </div><div class="line">inet <span class="number">10.8</span><span class="number">.0</span><span class="number">.120</span> netmask <span class="number">0xffffff00</span> broadcast <span class="number">10.8</span><span class="number">.0</span><span class="number">.255</span></div></pre></td></tr></table></figure></p>
-<p>注：得到IP为：10.8.0.x 则说明VPN客户端配置成功<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ping <span class="number">10.8</span><span class="number">.0</span><span class="number">.1</span>    #检查是否能ping通内网等机器</div></pre></td></tr></table></figure></p>
-<p>###3.7 服务加入开机自启动<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vim /etc/rc<span class="selector-class">.local</span></div><div class="line">openvpn --config /etc/openvpn/conf/client<span class="selector-class">.conf</span> --askpass /etc/openvpn/conf/password<span class="selector-class">.txt</span> --daemon</div></pre></td></tr></table></figure></p>
-
+        <p>作者: Adam</p>
+<h2 id="什么是ORM？"><a href="#什么是ORM？" class="headerlink" title="什么是ORM？"></a>什么是<code>ORM</code>？</h2><p>简单的讲就是对<code>SQL</code>查询语句的封装，让我们可以用<code>OOP</code>的方式操作数据库，优雅的生成安全、可维护的<code>SQL</code>代码。直观上，是一种<code>Model</code>和<code>SQL</code>的映射关系。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://hopperclouds.github.io/2016/09/08/openvpn/" data-id="cisu9i8cx0023zasqfkshma0p" class="article-share-link" data-share="baidu" data-title="">分享到</a>
+        <a data-url="http://hopperclouds.github.io/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/" data-id="ciu3ixcac0000rjsq4d7q9xpx" class="article-share-link" data-share="baidu" data-title="Nodejs ORM框架Sequelizejs快速入门">分享到</a>
       
 
       
-        <a href="http://hopperclouds.github.io/2016/09/08/openvpn/#disqus_thread" class="article-comment-link">评论</a>
+        <a href="http://hopperclouds.github.io/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/#disqus_thread" class="article-comment-link">评论</a>
       
 
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nodejs/">Nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ORM/">ORM</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-OpenVPN服务部署使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/08/OpenVPN服务部署使用/" class="article-date">
+  <time datetime="2016-09-08T12:00:00.000Z" itemprop="datePublished">2016-09-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/blog/">blog</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/08/OpenVPN服务部署使用/">OpenVPN服务部署使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>作者：liudong at 2016-09-08 20:00:00</p>
+<p>OpenVPN服务部署使用<br>1 服务端部署（Ubuntu）<br>1.1 安装OpenVPN 所需插件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install openssl</div><div class="line">$ sudo apt-get install libssl-dev</div><div class="line">$ sudo apt-get install libpam0g-dev</div><div class="line">$ sudo apt-get install liblzo2-dev</div></pre></td></tr></table></figure></p>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/08/OpenVPN服务部署使用/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://hopperclouds.github.io/2016/09/08/OpenVPN服务部署使用/" data-id="ciu3ixcap0005rjsq5k47hrvg" class="article-share-link" data-share="baidu" data-title="OpenVPN服务部署使用">分享到</a>
+      
+
+      
+        <a href="http://hopperclouds.github.io/2016/09/08/OpenVPN服务部署使用/#disqus_thread" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/运维/">运维</a></li></ul>
+
     </footer>
   </div>
   
@@ -205,7 +217,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://hopperclouds.github.io/2016/09/08/django自定义storage/" data-id="cisu9i8be0005zasqhp69enl6" class="article-share-link" data-share="baidu" data-title="django自定义storage">分享到</a>
+        <a data-url="http://hopperclouds.github.io/2016/09/08/django自定义storage/" data-id="ciu3ixcax0009rjsqln0qyvt9" class="article-share-link" data-share="baidu" data-title="django自定义storage">分享到</a>
       
 
       
@@ -214,6 +226,66 @@
 
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/django/">django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-从程序员到架构师的成长之路" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/07/从程序员到架构师的成长之路/" class="article-date">
+  <time datetime="2016-09-07T06:08:21.000Z" itemprop="datePublished">2016-09-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/UML/">UML</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/07/从程序员到架构师的成长之路/">从程序员到架构师的成长之路</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>作者: likaiguo</p>
+<h2 id="从程序员到架构师的成长之路"><a href="#从程序员到架构师的成长之路" class="headerlink" title="从程序员到架构师的成长之路"></a>从程序员到架构师的成长之路</h2><hr>
+<h2 id="课程大纲"><a href="#课程大纲" class="headerlink" title="课程大纲"></a>课程大纲</h2><ul>
+<li>程序员的技术发展道路和职业规划</li>
+<li>提升代码质量和开发效率的方法</li>
+<li>什么是适合业务发展的好架构?</li>
+<li>架构师日常工作,享受什么样的苦与乐?</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/07/从程序员到架构师的成长之路/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://hopperclouds.github.io/2016/09/07/从程序员到架构师的成长之路/" data-id="ciu3ixcc00027rjsq4ogp8lqo" class="article-share-link" data-share="baidu" data-title="从程序员到架构师的成长之路">分享到</a>
+      
+
+      
+        <a href="http://hopperclouds.github.io/2016/09/07/从程序员到架构师的成长之路/#disqus_thread" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/面向对象/">面向对象</a></li></ul>
 
     </footer>
   </div>
@@ -244,25 +316,17 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="react-js介绍"><a href="#react-js介绍" class="headerlink" title="react.js介绍"></a>react.js介绍</h2><h3 id="react-js的提出"><a href="#react-js的提出" class="headerlink" title="react.js的提出"></a>react.js的提出</h3><p>react.js的首次提出是在2014年Facebook的f8大会上。顺便科普一下f8大会，f8大会是由Facebook组织的年度的技术峰会，之所以叫f8，就是看大家在8小时以内能做出哪些有意思的东西。<br>react.js称为颠覆式前端UI开发框架。目前基于html的前端开发变得越来越复杂，传统的开发方式基于来自服务器和来自用户输入的交互数据,动态反应到复杂界面的时候，代码量变得越来越大，难以维护。<br>比如，前端开发框架jquey，每次数据更新，必须手动把数据更新渲染到ui界面上,代码量极大。基于此，google推出的angular.js的双向数据绑定很好的解决了这个问题。但是angular.js也有自身的一些不足。1：angular过重，不适用于对性能要求特别高的站点。2：ui组件封装比较复杂，不利于重用。而react解决了所有的这些问题。<br>ReactJS官网地址：<a href="http://facebook.github.io/react/" target="_blank" rel="external">http://facebook.github.io/react/</a><br>Github地址：<a href="https://github.com/facebook/react" target="_blank" rel="external">https://github.com/facebook/react</a></p>
-<h3 id="react-js的特点"><a href="#react-js的特点" class="headerlink" title="react.js的特点"></a>react.js的特点</h3><h4 id="1、就是轻，数据渲染响应非常快。"><a href="#1、就是轻，数据渲染响应非常快。" class="headerlink" title="1、就是轻，数据渲染响应非常快。"></a>1、就是轻，数据渲染响应非常快。</h4><p>复杂或频繁的DOM操作通常是性能瓶颈产生的原因。React为此引入了虚拟DOM（Virtual DOM）的机制：在浏览器端用Javascript实现了一套DOM API。基于React进行开发时所有的DOM构造都是通过虚拟DOM进行，每当数据变化时，React都会重新构建整个DOM树，然后React将当前整个DOM树和上一次的DOM树进行对比，得到DOM结构的区别，然后仅仅将需要变化的部分进行实际的浏览器DOM更新。尽管每一次都需要构造完整的虚拟DOM树，但是因为虚拟DOM是内存数据，性能是极高的，而对实际DOM进行操作的仅仅是Diff部分，因而能达到提高性能的目的。</p>
-<h4 id="2：组件化开发思想。"><a href="#2：组件化开发思想。" class="headerlink" title="2：组件化开发思想。"></a>2：组件化开发思想。</h4><p>React推荐以组件的方式去重新思考UI构成，将UI上每一个功能相对独立的模块定义成组件，然后将小的组件通过组合或者嵌套的方式构成大的组件，最终完成整体UI的构建。</p>
-<h3 id="react试用场景"><a href="#react试用场景" class="headerlink" title="react试用场景"></a>react试用场景</h3><p>react 这么厉害到底适用于哪些场景呢？<br>1、复杂场景下的高性能要求。<br>2、重用组件库，组件组合。</p>
-<h2 id="react-html、css基础实践"><a href="#react-html、css基础实践" class="headerlink" title="react html、css基础实践"></a>react html、css基础实践</h2><p>下面让我们来看看一组代码：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../build/react.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../build/react-dom.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"../build/browser.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span><span class="undefined"></span></div><div class="line">   .redColor&#123;</div><div class="line">    color: red;</div><div class="line">   &#125;</div><div class="line">  <span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"example"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/babel"</span>&gt;</span><span class="javascript"></span></div><div class="line">    <span class="keyword">var</span> Hello = React.createClass(&#123;</div><div class="line">      render:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">          <span class="keyword">var</span> styleObj = &#123;</div><div class="line">            textDecoration:<span class="string">'underline'</span></div><div class="line">          &#125;;</div><div class="line">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">"redColor"</span> <span class="attr">style</span>=<span class="string">&#123;&#123;fontSize:</span>'<span class="attr">18px</span>'&#125;&#125;&gt;</span>Hello &#123;this.props.name&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></div><div class="line">      &#125;</div><div class="line">    &#125;);</div><div class="line">    ReactDOM.render(</div><div class="line">      <span class="xml"><span class="tag">&lt;<span class="name">Hello</span> <span class="attr">name</span>=<span class="string">"World"</span>/&gt;</span>,</span></div><div class="line">      document.getElementById('example')</div><div class="line">    );</div><div class="line">  <span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>现在来解释一下这段代码<br>1.react用的是jsx，是facebook为react开发的一套语法糖。语法糖是计算机中添加的一种语法，对语言的功能没有影响，但是更方便程序员使用，增加可读性减少程序出错机会。类似的还有CoffeeScript、TypeScript等。最终都被解析库解析成js。这里引入的browser.js 就是jsx的解析库。作用是将 JSX 语法转为 JavaScript 语法。另外 <code>&lt;script&gt;</code> 标签的 type 属性为 <code>text/babel</code> 。表明这是jsx语法。</p>
-<p>2.jsx为我们带来的便利就是，我们可以在js里写类dom的结构，比我们用原生js拼接字符串要简单方便许多。jsx语法允许我们生成原生的dom标签，还可以生成自定义标签。比如hello，这些统称为react components.通过调用ReactDOM将react components呈现在页面上。</p>
-<p>3.ReactDOM.render是React的最基本方法，用于将模板转为 HTML 语言，并插入指定的 DOM 节点。第一个参数是要插入的components，第二个参数是要插入的容器。<br>自定义的标签是通过React.createClass申明，参数是一个js的对象。return的内容就是渲染的结构。遇到 HTML 标签（以 <code>&lt;</code> 开头），就用 HTML 规则解析；遇到代码块（以 <code>{</code> 开头），就用 JavaScript 规则解析。</p>
-<p>4.给标签添加css属性有两种：<br> 一种：用外联样式，注意这里是className，因为这是jsx语法，class在js中已经是一个保留关键字。<br> 二种：内联样式。在react中内联样式必须用样式对象来表示，在react中内联样式必须用样式对象来表示，必须用驼峰。且用｛｛｝｝包裹。这里为什么要用｛｛｝｝，让我们再看看另一种写法就一目了然了。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"example"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/babel"</span>&gt;</span><span class="javascript"></span></div><div class="line">  <span class="keyword">var</span> Hello = React.createClass(&#123;</div><div class="line">    render:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="keyword">var</span> styleObj = &#123;</div><div class="line">          fontSize:<span class="string">'18px'</span></div><div class="line">        &#125;;</div><div class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">"redColor"</span> <span class="attr">style</span>=<span class="string">&#123;styleObj&#125;</span>&gt;</span>Hello &#123;this.props.name&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">  ReactDOM.render(</div><div class="line">    <span class="xml"><span class="tag">&lt;<span class="name">Hello</span> <span class="attr">name</span>=<span class="string">"World"</span>/&gt;</span>,</span></div><div class="line">    document.getElementById('example')</div><div class="line">  );</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>这里申明一个样式对象，用｛｝包裹就能以js的方式来解析。和<code>｛｛fontSize:&quot;18px&quot;｝｝</code>异曲同工。<br>可以隐约的看到，react的组件通过样式对象的申明可以，react组件是html、css、js的集合，成为真正意义上的独立组件。</p>
-<p>这次我们简单介绍了react的由来、特点、应用场景。以及，jsx语法糖，如何生成自定义标签，插入节点，添加css样式，这些都是react的基础，接下来，我们继续react compenents的生命周期。</p>
-
+        <h2 id="react-js介绍"><a href="#react-js介绍" class="headerlink" title="react.js介绍"></a>react.js介绍</h2><h3 id="react-js的提出"><a href="#react-js的提出" class="headerlink" title="react.js的提出"></a>react.js的提出</h3><p>react.js的首次提出是在2014年Facebook的f8大会上。顺便科普一下f8大会，f8大会是由Facebook组织的年度的技术峰会，之所以叫f8，就是看大家在8小时以内能做出哪些有意思的东西。<br>react.js称为颠覆式前端UI开发框架。目前基于html的前端开发变得越来越复杂，传统的开发方式基于来自服务器和来自用户输入的交互数据,动态反应到复杂界面的时候，代码量变得越来越大，难以维护。<br>比如，前端开发框架jquey，每次数据更新，必须手动把数据更新渲染到ui界面上,代码量极大。基于此，google推出的angular.js的双向数据绑定很好的解决了这个问题。但是angular.js也有自身的一些不足。1：angular过重，不适用于对性能要求特别高的站点。2：ui组件封装比较复杂，不利于重用。而react解决了所有的这些问题。<br>ReactJS官网地址：<a href="http://facebook.github.io/react/">http://facebook.github.io/react/</a><br>Github地址：<a href="https://github.com/facebook/react">https://github.com/facebook/react</a></p>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/06/react入门介绍/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://hopperclouds.github.io/2016/09/06/react入门介绍/" data-id="cisu9i8bh0006zasqpu5t5vot" class="article-share-link" data-share="baidu" data-title="react入门介绍">分享到</a>
+        <a data-url="http://hopperclouds.github.io/2016/09/06/react入门介绍/" data-id="ciu3ixcaz000brjsq5pl3bqlo" class="article-share-link" data-share="baidu" data-title="react入门介绍">分享到</a>
       
 
       
@@ -308,41 +372,16 @@
 <li>恶意用户脚本攻击</li>
 <li>web页面按钮卡顿重复点击引起</li>
 </ul>
-<h2 id="2-服务器优化方向"><a href="#2-服务器优化方向" class="headerlink" title="2.服务器优化方向"></a>2.服务器优化方向</h2><ul>
-<li>web服务器层防御，如nginx可以限制单一IP每秒钟的访问次数</li>
-<li>应用层防御，通过web应用程序进行控制</li>
-<li>数据层防御</li>
-</ul>
-<h2 id="3-常规防冲击"><a href="#3-常规防冲击" class="headerlink" title="3.常规防冲击"></a>3.常规防冲击</h2><ul>
-<li>nginx 配置 –访问速率控制<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">        ...</div><div class="line">        location /download/ &#123;</div><div class="line">            limit_conn addr 100; #单一IP每秒钟最多访问100次</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>在代理层防御主要应对于大规模高并发，例如有恶意用户高速率抓取本网站数据，导致网站服务性能下降时，<br>就需要进行IP访问速率限制；但是考虑到国内网络环境，基本绝大用户都是共享公共IP进行上网，所以此限制也并不是一定会打开。</p>
-<ul>
-<li>黑名单机制 –防恶意攻击<ul>
-<li>网络服务商控制，例如使用阿里云的可以通过阿里云的安全策略配置进行设置黑名单。</li>
-<li>服务器 本地防火墙策略</li>
-<li>web服务器 nginx配置黑名单</li>
-<li>web应用中通过缓存黑名单进行控制</li>
-</ul>
-</li>
-</ul>
-<h2 id="4-异常访问带来的数据重复如何规避"><a href="#4-异常访问带来的数据重复如何规避" class="headerlink" title="4.异常访问带来的数据重复如何规避"></a>4.异常访问带来的数据重复如何规避</h2><ul>
-<li>数据表多字段进行联合唯一索引，通过数据库的限制进行脏数据的排除。 (推荐)</li>
-<li>数据库加锁，分悲观锁和乐观锁，具体概念不做讲述，一旦加了锁，也就给开发者自己加了锁，自己琢磨去吧。</li>
-<li>具体业务进行单一服务化，单实例进行处理，可通过MQ与主业务服务进行交互。（推荐）</li>
-</ul>
-<h2 id="5-具体的某个应用服务如何进行访问速率限制"><a href="#5-具体的某个应用服务如何进行访问速率限制" class="headerlink" title="5.具体的某个应用服务如何进行访问速率限制"></a>5.具体的某个应用服务如何进行访问速率限制</h2><ul>
-<li>直接上代码了，通过redis的原子操作机制设定计数器，也可称为限速器。<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">limit_api_call</span><span class="params">(key, limit, timeout)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    API限速器</div><div class="line">    :param key:</div><div class="line">    :param limit:限制次数</div><div class="line">    :param timeout: 单位时间</div><div class="line">    :return: True or False</div><div class="line">    """</div><div class="line">    lua_incr = <span class="string">"""</span></div><div class="line">        local current</div><div class="line">        current = redis.call("incr",KEYS[1])</div><div class="line">        if tonumber(current) == 1 then</div><div class="line">            redis.call("expire",KEYS[1],ARGV[1])</div><div class="line">        end</div><div class="line">        return current</div><div class="line">    """</div><div class="line">    current = client.eval(lua_incr, <span class="number">1</span>, key, timeout)</div><div class="line">    current = int(current)</div><div class="line">    <span class="keyword">if</span> current &gt; limit:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">True</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>Reids官方文档中也提供了其他几种实现方式，但是除了是用lua脚本原子操作进行辅助，其他都只能概率限制，无法准确限速。</p>
-
+        
+          <p class="article-more-link">
+            <a href="/2016/09/02/Python-Web并发重复数据防守策略/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://hopperclouds.github.io/2016/09/02/Python-Web并发重复数据防守策略/" data-id="cisu9i8b50001zasqfpkcrjdq" class="article-share-link" data-share="baidu" data-title="Python-Web并发重复数据防守策略">分享到</a>
+        <a data-url="http://hopperclouds.github.io/2016/09/02/Python-Web并发重复数据防守策略/" data-id="ciu3ixcbz0026rjsq4b63a5ed" class="article-share-link" data-share="baidu" data-title="Python-Web并发重复数据防守策略">分享到</a>
       
 
       
@@ -387,18 +426,16 @@
       
         <p>作者：纯利</p>
 <p>那么什么叫递归呢？所谓<strong>递归函数就是在函数体内调用本函数</strong>。最简单的例子就是计算阶乘。0和1的阶乘都会被定义为1，更大的数的阶乘是通过计算1<em>1</em>…来求得的，每次增加1，直至达到要计算阶乘的那个数。</p>
-<p>递归的缺点：如果递归函数的终止条件不明确或者缺少终止条件会导致函数长时间运行，是用户界面处于假死状态。值得注意的是：浏览器对递归的支持熟练与JS调用栈大小直接相关，当使用太多递归甚至超过最大调用栈容量时，浏览器会报错误信息，各个浏览器对报错的提示信息也不一样。</p>
-<p>下面我们先来看一下一个经典的递归阶乘函数：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params">num</span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(num &lt;= <span class="number">1</span>)&#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">return</span> num * test(num<span class="number">-1</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上面的的这个函数表面上没有什么问题，但是以下的代码却可能会导致问题：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> f = test;</div><div class="line">test = <span class="literal">null</span>;</div><div class="line"><span class="built_in">console</span>.log(f(<span class="number">2</span>));<span class="comment">//报错 Uncaught TypeError: test is not a function</span></div></pre></td></tr></table></figure></p>
-<p>指向原始函数的引用就剩下一个，当调用f()函数时，而test已经不再是一个函数了，所以会导致错误，但是我们可以使用arguments.callee来解决这个问题。</p>
-<p>大家都知道，arguments.callee是一个指向正在执行的函数的指针，因此可以用它来实现函数的递归调用,看如下代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params">num</span>)</span>&#123;</div><div class="line">    <span class="keyword">if</span>(num &lt;= <span class="number">1</span>)&#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">return</span> num * <span class="built_in">arguments</span>.callee(num<span class="number">-1</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这样即使函数赋值给了另外一个变量，f()函数依然是有效的，所以递归调用能正常完成。而且这种方式在严格模式和非严格模式下都可以使用哦。</p>
-
+        
+          <p class="article-more-link">
+            <a href="/2016/09/02/JavaScript之递归/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://hopperclouds.github.io/2016/09/02/JavaScript之递归/" data-id="cisu9i8b00000zasqfg9px2mg" class="article-share-link" data-share="baidu" data-title="JavaScript之递归">分享到</a>
+        <a data-url="http://hopperclouds.github.io/2016/09/02/JavaScript之递归/" data-id="ciu3ixcan0004rjsqh3ap388b" class="article-share-link" data-share="baidu" data-title="JavaScript之递归">分享到</a>
       
 
       
@@ -444,71 +481,17 @@
         <p>author: likaiguo</p>
 <h1 id="Zeppelin-飞艇"><a href="#Zeppelin-飞艇" class="headerlink" title="Zeppelin(飞艇)"></a>Zeppelin(飞艇)</h1><p>Zeppelin思维导图</p>
 <p><img src="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472665482681.png" alt="2016/9/1/截图" title="blob_1472665482681.png"></p>
-<p>推荐查看思维导图中的各个链接,尤其是<a href="https://zeppelin.apache.org/docs/0.6.1/" target="_blank" rel="external">官方文档</a>和<a href="">中文翻译</a>.</p>
-<h2 id="快速搭建Zeppelin环境"><a href="#快速搭建Zeppelin环境" class="headerlink" title="快速搭建Zeppelin环境"></a>快速搭建Zeppelin环境</h2><h3 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h3><ul>
-<li>到官网下载二进制包（<a href="http://zeppelin.apache.org/download.html）" target="_blank" rel="external">http://zeppelin.apache.org/download.html）</a></li>
-<li>解压到本地(保证已经设置好Java环境)</li>
-</ul>
-<h3 id="运行Zeppelin服务"><a href="#运行Zeppelin服务" class="headerlink" title="运行Zeppelin服务"></a>运行Zeppelin服务</h3><p>bin/zeppelin-daemon.sh start|stop|restart</p>
-<p>浏览器中打开：<a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a> 即可进入Zeppelin首页。</p>
-<p><img src="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472668081493.png" alt="2016-9-1-截图" title="blob_1472668081493.png"></p>
-<h2 id="Zeppelin是什么"><a href="#Zeppelin是什么" class="headerlink" title="Zeppelin是什么?"></a>Zeppelin是什么?</h2><p>A web-based notebook that enables interactive data analytics.<br>You can make beautiful data-driven, interactive and collaborative documents with SQL, Scala and more.</p>
-<p>一款基于web页面的笔记本(类似ipython中的notebook),其提供<strong>交互式</strong>数据分析功能.<br>使用Zeppelin(飞艇)我们能使用如SQL,Scala等后端语言制作出数据驱动的,交互式的并且易于协作的文档.</p>
-<h2 id="Zeppelin基本概念"><a href="#Zeppelin基本概念" class="headerlink" title="Zeppelin基本概念"></a>Zeppelin基本概念</h2><h3 id="1-支持多种后端语言-Interpreter-解释器"><a href="#1-支持多种后端语言-Interpreter-解释器" class="headerlink" title="1.支持多种后端语言,Interpreter(解释器)"></a>1.支持多种后端语言,<a href="https://zeppelin.apache.org/docs/latest/manual/interpreters.html" target="_blank" rel="external">Interpreter(解释器)</a></h3><p><img src="https://zeppelin.apache.org/assets/themes/zeppelin/img/available_interpreters.png" alt="可以使用的解释器"></p>
-<p>抽象出解释器概念,运行各种语言和数据处理后端工具.在Zeppelin中解释器被设计为可插拔的模块.<br>目前支持各种各样的解释器,如上图所示包括Apache Spark, Python, JDBC, Markdown and Shell等等.</p>
-<p>同时也可以<a href="https://zeppelin.apache.org/docs/0.6.1/manual/interpreters.html" target="_blank" rel="external">写自己需要的解释器</a>.</p>
-<ol>
-<li>在现有的解释器的基础上配置对应的参数生成新的解释器</li>
-<li>写相关的Java或者scala程序开发更加特定的解释器[参考文献2]</li>
-</ol>
-<h3 id="2-强大的数据可视化能力"><a href="#2-强大的数据可视化能力" class="headerlink" title="2.强大的数据可视化能力"></a>2.强大的数据可视化能力</h3><p><img src="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472669411484.png" alt="2016/9/1/截图" title="blob_1472669411484.png"></p>
-<p>Zeppelin具有较为常用的数据可视化的图表. 如上图所示,表格,柱状图,饼图,趋势图,散点图一应俱全.</p>
-<p>数据可视化不仅限于Spark SQL,任意一种语言的表格输出都能被完美转译成对应的图表.</p>
-<p>并且能够导出对应的CSV等类型数据.</p>
-<h3 id="3-数据透视表"><a href="#3-数据透视表" class="headerlink" title="3.数据透视表"></a>3.数据透视表</h3><p><img src="https://zeppelin.apache.org/assets/themes/zeppelin/img/screenshots/pivot.png" alt=""><br>Apache Zeppelin aggregates values and displays them in pivot chart with simple drag and drop. You can easily create chart with multiple aggregated values including sum, count, average, min, max.</p>
-<p>飞艇能够在页面上通过简单的拖拽进行各种聚合操作,并且展示出对应的数据透视表.<br>同时也可以很容易通过求和,计数,平均,最小,最大创建各种聚合值的图表.</p>
-<h3 id="4-动态表格"><a href="#4-动态表格" class="headerlink" title="4.动态表格"></a>4.动态表格</h3><p><img src="https://zeppelin.apache.org/assets/themes/zeppelin/img/screenshots/dynamicform.png" alt=""><br>Zeppelin可以通过动态表格方式在notebook中添加诸如: 文本框,复选框,单选框等表单元素.<br>通过这种方式,我们可以快速进行对应的动态操作.</p>
-<p>典型应用:</p>
-<p><img src="http://img.blog.csdn.net/20150523163620563" alt=""></p>
-<p>这里${maxAge=30}的写法表示一个文本框元素,并且默认值为30。当修改对应的值是下方的图表会对应产生变化。</p>
-<p><a href="https://zeppelin.apache.org/docs/latest/manual/dynamicform.html" target="_blank" rel="external">https://zeppelin.apache.org/docs/latest/manual/dynamicform.html</a></p>
-<p>文档很重要.</p>
-<p>遇到一个奇怪的问题:<br>当使用下拉框时,对应的值可以实时变化. 其他如文本框,复选框都不实时变化,需要点击三角形run按钮才能生效.</p>
-<h3 id="5-将notebook共享给他人-更好的协作"><a href="#5-将notebook共享给他人-更好的协作" class="headerlink" title="5.将notebook共享给他人,更好的协作"></a>5.将notebook共享给他人,更好的协作</h3><p><img src="https://zeppelin.apache.org/assets/themes/zeppelin/img/screenshots/publish.png" alt=""></p>
-<ul>
-<li>可以直接将写好的notebook发送给其他人,放入工程的notebook目录下即可</li>
-<li>可以将生成的图表共享给他人(复制对应的link,参见文献2和官方文档)</li>
-</ul>
-<h2 id="Zeppelin使用场景-特点"><a href="#Zeppelin使用场景-特点" class="headerlink" title="Zeppelin使用场景(特点)?"></a>Zeppelin使用场景(特点)?</h2><p>apache zeppelin应该会很吸引分布式计算、数据分析从业者,是个值得把玩的算比较前卫的项目。</p>
-<ul>
-<li>代码量少，</li>
-<li>模块很清楚，</li>
-<li>可以尝试接入多种不同计算引擎，</li>
-<li>实时任务运行、可视化效果</li>
-<li>没有过多复杂的操作，只是区分了多个notebook，</li>
-<li>每个notebook里做单独的分析处理工作，流程和结果会被保存下来。</li>
-<li>此外，为spark做了更好的支持，比如默认是scala环境，默认sc已经创建好，即spark local可跑，默认spark sql有可视化效果。</li>
-<li>一站式数据分析: 文档,不同工具集一应俱全</li>
-</ul>
-<h2 id="Zeppelin怎样服务于我们的业务"><a href="#Zeppelin怎样服务于我们的业务" class="headerlink" title="Zeppelin怎样服务于我们的业务?"></a>Zeppelin怎样服务于我们的业务?</h2><ol>
-<li>应用于快速导入数据并且进行可视化</li>
-<li>将多种数据处理技术和语言融合在一起</li>
-<li>优美文档书写</li>
-<li>快速给客户提供数据可视化服务</li>
-</ol>
-<h2 id="Zeppelin常见问题"><a href="#Zeppelin常见问题" class="headerlink" title="Zeppelin常见问题"></a>Zeppelin常见问题</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
-<li><a href="http://blog.csdn.net/laozhaokun/article/details/44803061" target="_blank" rel="external">Apache Zeppelin简介</a></li>
-<li><a href="http://blog.csdn.net/pelick/article/details/45934993" target="_blank" rel="external">Apache Zeppelin安装及介绍</a></li>
-<li><a href="http://www.flyml.net/2016/08/19/reinforce-spark-with-zeppelin-basic/" target="_blank" rel="external">让Spark如虎添翼的Zeppelin – 基础篇</a></li>
-<li><a href="http://www.flyml.net/2016/08/22/zeppelin-demo-mysql-data/" target="_blank" rel="external">Zeppelin 小试牛刀 – 使用Zeppelin展示MySQL的数据</a></li>
-<li><a href="http://www.cnblogs.com/smartloli/p/5148941.html" target="_blank" rel="external">Hadoop - Zeppelin 使用心得</a></li>
-</ul>
-
+<p>推荐查看思维导图中的各个链接,尤其是<a href="https://zeppelin.apache.org/docs/0.6.1/">官方文档</a>和<a href="">中文翻译</a>.</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://hopperclouds.github.io/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/" data-id="cisu9i8bu000hzasqgmgw2bbv" class="article-share-link" data-share="baidu" data-title="数据处理/分析/可视化飞艇(zeppelin)介绍">分享到</a>
+        <a data-url="http://hopperclouds.github.io/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/" data-id="ciu3ixcb6000lrjsqq3ygq26h" class="article-share-link" data-share="baidu" data-title="数据处理/分析/可视化飞艇(zeppelin)介绍">分享到</a>
       
 
       
@@ -552,116 +535,16 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>&emsp;&emsp;&emsp;&emsp;为了更深入地理解ElasticSearch的工作原理，特别是索引和查询这两个<br>过程，理解Lucene的工作原理至关重要。本质上，ElasticSearch是用Lucene<br>来实现索引的查询功能的。如果读者没有用过Lucene，下面的几个部分将<br>为您介绍Lucene的基本概念。</p>
-<h2 id="熟悉Lucene"><a href="#熟悉Lucene" class="headerlink" title="熟悉Lucene"></a>熟悉Lucene</h2><p>&emsp;&emsp;&emsp;&emsp;读者也许会产生疑问，为什么ElasticSearch 的创造者最终采用Lucene<br>而不是自己开发相应功能的组件。我们也不知道为什么，因为我们不是决策者。<br>但是我们可以猜想可能是因为Lucene是一个成熟的、高性能的、可扩展的、轻<br>量级的，而且功能强大的搜索引擎包。Lucene的核心jar包只有一个文件，而且<br>不依赖任何第三方jar包。更重要的是，它提供的索引数据和检索数据的功能开<br>箱即用。当然，Lucene也提供了多语言支持，具有拼写检查、高亮等功能；但<br>是如果你不需要这些功能，你只需要下载Lucene的核心jar包，应用到你的项目<br>    中就可以了。</p>
-<h2 id="总体架构"><a href="#总体架构" class="headerlink" title="总体架构"></a>总体架构</h2><p>介绍Lucene架构之前必须理解一些基本的概念,才能更好的理解Lucene的<br>架构,这些概念是:</p>
-<hr>
-<ul>
-<li><strong>Document</strong>:它是在索引和搜索过程中数据的主要表现形式，或者称“载体”，<br>承载着我们索引和搜索的数据,它由一个或者多个域(Field)组成。</li>
-<li><strong>Field*</strong>:它是Document的组成部分，由两部分组成，名称(name)和值(value)。</li>
-<li><strong>Term</strong>:它是搜索的基本单位，其表现形式为文本中的一个词。</li>
-<li><strong>Token</strong>:它是单个Term在所属Field中文本的呈现形式，包含了Term内容、<br>Term类型、Term在文本中的起始及偏移位置。</li>
-</ul>
-<hr>
-<p>Apache Lucene把所有的信息都写入到一个称为<strong>倒排索引</strong>的数据结构中。<br>这种数据结构把索引中的每个Term与相应的Document映射起来，这与关系型数据<br>库存储数据的方式有很大的不同。读者可以把倒排索引想象成这样的一种数据结构：<br>数据以Term为导向，而不是以Document为导向。</p>
-<p><em>ElasticSearch Servier (document 1)</em><br><em>Mastering ElasticSearch (document 2)</em><br><em>Apache Solr 4 Cookbook (document 3)</em><br>所以索引(以一种直观的形式)展现如下：</p>
-<table>
-<thead>
-<tr>
-<th>Term</th>
-<th>count</th>
-<th>Docs</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td>1</td>
-<td><3></3></td>
-</tr>
-<tr>
-<td>Apache</td>
-<td>1</td>
-<td><3></3></td>
-</tr>
-<tr>
-<td>Cookbook</td>
-<td>1</td>
-<td><3></3></td>
-</tr>
-<tr>
-<td>ElasticSearch</td>
-<td>2</td>
-<td><1> <2></2></1></td>
-</tr>
-<tr>
-<td>Mastering</td>
-<td>1</td>
-<td><1></1></td>
-</tr>
-<tr>
-<td>Server</td>
-<td>1</td>
-<td><1></1></td>
-</tr>
-<tr>
-<td>Solr</td>
-<td>1</td>
-<td><3></3></td>
-</tr>
-</tbody>
-</table>
-<p>正如所看到的那样，每个词都指向它所在的文档号(Document Number/Document ID)。<br>这样的存储方式使得高效的信息检索成为可能，比如基于词的检索(term-based query)。<br>此外，每个词映射着一个数值(Count)，它代表着Term在文档集中出现的频繁程度。<br>当然，Lucene创建的真实索引远比上文复杂和先进。这是因为在Lucene中，词向量(由单<br>独的一个Field形成的小型倒排索引，通过它能够获取这个特殊Field的所有Token信息)可<br>以存储；所有Field的原始信息可以存储；删除Document的标记信息可以存储……。核心在于<br>了解数据的组织方式，而非存储细节。</p>
-<p>每个索引被分成了多个段(Segment)，段具有一次写入，多次读取的特点。只要形成了，<br>段就无法被修改。例如：被删除文档的信息被存储到一个单独的文件，但是其它的段文件<br>并没有被修改。</p>
-<p>需要注意的是，多个段是可以合并的，这个合并的过程称为segments merge。经过强制<br>合并或者Lucene的合并策略触发的合并操作后，原来的多个段就会被Lucene创建的更大的<br>一个段所代替了。很显然，段合并的过程是一个I/O密集型的任务。这个过程会清理一些信息，<br>比如会删除.del文件。除了精减文件数量，段合并还能够提高搜索的效率，毕竟同样的信息，<br>在一个段中读取会比在多个段中读取要快得多。但是，由于段合并是I/O密集型任务，建议不好<br>强制合并，小心地配置好合并策略就可以了。</p>
-<h2 id="分析你的文本"><a href="#分析你的文本" class="headerlink" title="分析你的文本"></a>分析你的文本</h2><p>问题到这里就变得稍微复杂了一些。传入到Document中的数据是如何转变成倒排索引的？<br>查询语句是如何转换成一个个Term使高效率文本搜索变得可行？这种转换数据的过程就称<br>为文本分析(analysis)</p>
-<p>文本分析工作由analyzer组件负责。analyzer由一个分词器(tokenizer)和0个或者多<br>个过滤器(filter)组成,也可能会有0个或者多个字符映射器(character mappers)组成。</p>
-<p>Lucene中的tokenizer用来把文本拆分成一个个的Token。Token包含了比较多的信息，<br>比如Term在文本的中的位置及Term原始文本，以及Term的长度。文本经过tokenizer处<br>理后的结果称为token stream。token stream其实就是一个个Token的顺序排列。<br>token stream将等待着filter来处理。</p>
-<p>除了tokenizer外，Lucene的另一个重要组成部分就是filter链，filter链将用来处理<br>Token Stream中的每一个token。这些处理方式包括删除Token,改变Token，甚至添加新<br>的Token。Lucene中内置了许多filter，读者也可以轻松地自己实现一个filter。有如下<br>内置的filter：</p>
-<ul>
-<li><strong>Lowercase filter</strong>：把所有token中的字符都变成小写</li>
-<li><strong>ASCII folding filter</strong>：去除tonken中非ASCII码的部分</li>
-<li><strong>Synonyms filter</strong>：根据同义词替换规则替换相应的token</li>
-<li><strong>Multiple language-stemming filters</strong>：把Token(实际上是Token的文本内容)<br>转化成词根或者词干的形式。</li>
-</ul>
-<p>所以通过Filter可以让analyzer有几乎无限的处理能力：因为新的需求添加新的Filter就可以了。</p>
-<h4 id="索引和查询"><a href="#索引和查询" class="headerlink" title="索引和查询"></a><strong><em>索引和查询</em></strong></h4><p>在我们用Lucene实现搜索功能时，也许会有读者不明觉历：上述的原理是如何对索引过程<br>和搜索过程产生影响？</p>
-<p>索引过程：Lucene用用户指定好的analyzer解析用户添加的Document。当然Document中<br>不同的Field可以指定不同的analyzer。如果用户的Document中有title和description<br>两个Field，那么这两个Field可以指定不同的analyzer。</p>
-<p>搜索过程：用户的输入查询语句将被选定的查询解析器(query parser)所解析,生成多个<br>Query对象。当然用户也可以选择不解析查询语句，使查询语句保留原始的状态。<br>在ElasticSearch中，有的Query对象会被解析(analyzed)，有的不会，<br>比如：前缀查询(prefix query)就不会被解析，精确匹配查询(match query)<br>就会被解析。对用户来说，理解这一点至关重要。</p>
-<p>对于索引过程和搜索过程的数据解析这一环节，我们需要把握的重点在于：倒排索引中词应<br>该和查询语句中的词正确匹配。如果无法匹配，那么Lucene也不会返回我们喜闻乐见的结果。<br>举个例子：如果在索引阶段对文本进行了转小写(lowercasing)和转变成词根形式(stemming)<br>处理，那么查询语句也必须进行相同的处理，不然就搜索结果就会是竹篮打水——一场空。</p>
-<h2 id="Lucence查询语言"><a href="#Lucence查询语言" class="headerlink" title="Lucence查询语言"></a>Lucence查询语言</h2><p>ElasticSearch提供的一些查询方式(query types)能够被Lucene的查询解析器(query parser)<br>语法所支持。由于这个原因，我们来深入学习Lucene查询语言，了解其庐山真面目吧。</p>
-<h4 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a><strong><em>基础语法</em></strong></h4><p>用户使用Lucene进行查询操作时，输入的查询语句会被分解成一个或者多个Term以及逻辑运算符号。<br>一个Term，在Lucene中可以是一个词，也可以是一个短语(用双引号括引来的多个词)。如果事先设<br>定规则：解析查询语句，那么指定的analyzer就会用来处理查询语句的每个term形成Query对象。</p>
-<p>一个Query对象中会存在多个布尔运算符，这些布尔运算符将多个Term关联起来形成查询子句。<br>布尔运算符号有如下类型：</p>
-<ul>
-<li><strong>AND(与)</strong>:给定两个Term(左运算对象和右运算对象)，形成一个查询表达式。只有两个<br>Term都匹配成功，查询子句才匹配成功。比如：查询语句”apache AND lucene”的意思是匹<br>配含apache且含lucene的文档。</li>
-<li><strong>OR(或)</strong>:给定的多个Term，只要其中一个匹配成功，其形成的查询表达式就匹配成功。<br>比如查询表达式”apache OR lucene”能够匹配包含“apache”的文档，也能匹配包含”lucene”<br>的文档，还能匹配同时包含这两个Term的文档。</li>
-<li><strong>NOT(非)</strong>: 这意味着对于与查询语句匹配的文档，NOT运算符后面的Term就不能在文档中<br>出现的。例如：查询表达式“lucene NOT elasticsearch”就只能匹配包含lucene但是不含<br>elasticsearch的文档。</li>
-</ul>
-<p>此外，我们也许会用到如下的运算符：</p>
-<ul>
-<li><strong>+</strong>这个符号表明：如果想要查询语句与文档匹配，那么给定的Term必须出现在文档中。<br>例如：希望搜索到包含关键词lucene,最好能包含关键词apache的文档，可以用如下的查询<br>表达式：”+lucene apache”。</li>
-<li><strong>-</strong>这个符号表明：如果想要查询语句与文档匹配，那么给定的Term不能出现在文档中。<br>例如：希望搜索到包含关键词lucene,但是不含关键词elasticsearch的文档，可以用如下<br>的查询表达式：”+lucene -elasticsearch”。</li>
-</ul>
-<p>如果在Term前没有指定运算符，那么默认使用OR运算符。<br>此外，也是最后一点：查询表达式可以用小括号组合起来，形成复杂的查询表达式。比如：<br>elasticsearch AND (mastering OR book)</p>
-<h4 id="多域查询"><a href="#多域查询" class="headerlink" title="多域查询"></a>多域查询</h4><p>当然，跟ElasticSearch一样，Lucene中的所有数据都是存储在一个个的Field中，<br>多个Field形成一个Document。如果希望查询指定的Field,就需要在查询表达式中指<br>定Field Name(此域名非彼域名)，后面接一个冒号，紧接着一个查询表达式。例如：<br>查询title域中包含关键词elasticsearch的文档，查询表达式如下：<br>    title:elasticsearch<br>也可以把多个查询表达式用于一个域中。例如：查询title域中含关键词elasticsearch<br>并且含短语“mastering book”的文档，查询表达式如下：<br>    title:(+elasticsearch +”mastering book”)<br>当然，也可以换一种写法，作用是一样的：<br>    +title:elasticsearch +title:”mastering book”)</p>
-<h4 id="词语修饰符"><a href="#词语修饰符" class="headerlink" title="词语修饰符"></a>词语修饰符</h4><p>除了可以应用简单的关键词和查询表达式实现标准的域查询，Lucene还支持往查询表达式中<br>传入修饰符使关键词具有变形能力。最常用的修饰符，也是大家都熟知的，就是通配符。<br>Lucene支持?和*两种通配符。?可以匹配任意单个字符，而*能够匹配多个字符。</p>
-<p><strong><em>请注意出于性能考虑，默认的通配符不能是关键词的首字母。</em></strong></p>
-<p>此外，Lucene支持模糊查询(fuzzy query)和邻近查询(proximity query)。语法规则是查<br>询表达式后面接一个~符号，后面紧跟一个整数。如果查询表达式是单独一个Term，这表示我们<br>的搜索关键词可以由Term变形(替换一个字符，添加一个字符，删除一个字符)而来，即与Term<br>是相似的。这种搜索方式称为模糊搜索(fuzzy search)。在~符号后面的整数表示最大编辑距离。<br>例如：执行查询表达式 “writer~2”能够搜索到含writer和writers的文档。</p>
-<p>当~符号用于一个短语时，~后面的整数表示短语中可接收的最大的词编辑距离(短语中替换一个词，<br>添加一个词，删除一个词)。举个例子,查询表达式title:”mastering elasticsearch”只能匹<br>配title域中含”mastering elasticsearch”的文档，而无法匹配含”mastering book elasticsearch”<br>的文档。但是如果查询表达式变成title:”mastering elasticsearch”~2,那么两种文档就都<br>能够成功匹配了。</p>
-<p>此外，我们还可以使用加权(boosting)机制来改变关键词的重要程度。加权机制的语法是一个^符<br>号后面接一个浮点数表示权重。如果权重小于1，就会降低关键词的重要程度。同理，如果权重大于<br>1就会增加关键词的重要程度。默认的加权值为1。可以参考 第2章 活用用户查询语言 的 Lucene<br>默认打分规则详解 章节部分的内容来了解更多关于加权(boosting)是如何影响打分排序的。</p>
-<p>除了上述的功能外，Lucene还支持区间查询(range searching),其语法是用中括号或者}表示区间。<br>例如：如果我们查询一个数值域(numeric field)，可以用如下查询表达式：</p>
-<pre><code>price:[10.00 TO 15.00]
-</code></pre><p>这条查询表达式能查询到price域的值在10.00到15.00之间的所有文档。<br>对于string类型的field，区间查询也同样适用。例如：</p>
-<pre><code>name:[Adam TO Adria]
-</code></pre><p>这条查询表达式能查询到name域中含关键词Adam到关键词Adria之间关键词(字符串升序，且闭区间)的文档。<br>如果希望区间的边界值不会被搜索到，那么就需要用大括号替换原来的中括号。例如，查询price域中价<br>格在10.00(10.00要能够被搜索到)到15.00(15.00不能被搜索到)之间的文档，就需要用如下的查询表达式：</p>
-<pre><code>price:[10.00 TO 15.00}
-</code></pre><p>处理特殊字符</p>
-<p>如果在搜索关键词中出现了如下字符集合中的任意一个字符，就需要用反斜杠(\)进行转义。字符集合<br>如下： +, -, &amp;&amp;, || , ! , (,) , { } , [ ] , ^, “ , ~, *, ?, : , \, / 。<br>例如，查询关键词 abc”efg 就需要转义成 abc\”efg。</p>
-
+        
+          <p class="article-more-link">
+            <a href="/2016/08/31/认识Apache Lucene/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://hopperclouds.github.io/2016/08/31/认识Apache Lucene/" data-id="cisu9i8cr001wzasqbr6c0zs5" class="article-share-link" data-share="baidu" data-title="认识Apache Lucene">分享到</a>
+        <a data-url="http://hopperclouds.github.io/2016/08/31/认识Apache Lucene/" data-id="ciu3ixccj002krjsqk5tjuuno" class="article-share-link" data-share="baidu" data-title="认识Apache Lucene">分享到</a>
       
 
       
@@ -704,38 +587,17 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="str-和-repr"><a href="#str-和-repr" class="headerlink" title="__str__ 和 __repr__"></a>__str__ 和 __repr__</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><a href="https://docs.python.org/2/reference/datamodel.html#object.__str__" target="_blank" rel="external"><code>object.__str__</code></a>是python中一个常见的特殊方法, 会被内置函数被 <code>str</code> 和 <code>print</code> 调用。<br>常常与它一起出现的还有<a href="https://docs.python.org/2/reference/datamodel.html#object.__repr__" target="_blank" rel="external"><code>object.__repr__</code></a>, 类似地, 它会被内置函数 <code>repr</code> 调用。</p>
-<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p>那么 <code>str</code> 和 <code>repr</code> 同样作为”informal string representation of instances”, 有何区别?</p>
-<p>用一句话概括就是:</p>
-<blockquote>
-<p>repr is for developers, str is for customers.</p>
-</blockquote>
-<p>这点在IDE中调试时得以展现:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, grade)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.grade = grade</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'&#123;0&#125;(&#123;1&#125;)'</span>.format(self.name, self.grade)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'&lt;Student&gt;'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    student = Student(name=<span class="string">'Roy'</span>, grade=<span class="number">11</span>)</div></pre></td></tr></table></figure>
-<p>在debug模式下, pycharm将 <code>student</code> 展示为:</p>
-<p><img src="http://img.pinbot.me:8080/uploads/2016/8/31/blob_1472628279443.png" alt=""></p>
-<p>简洁明了。</p>
-<h2 id="unicode"><a href="#unicode" class="headerlink" title="__unicode__"></a>__unicode__</h2><p>出场率同样高的还有<a href="https://docs.python.org/2/reference/datamodel.html#object.__unicode__" target="_blank" rel="external"><code>object.__unicode__</code></a>, 和<code>object.__str__</code>作用类似, 但不同的是, <code>object.__unicode__</code> 返回的是一个unicode object, 而 <code>object.__str__</code> 返回的是string object。<br>这会引起一些问题, 特别是当你在使用python2中的unicode_literals时。</p>
-<h2 id="unicode-literals"><a href="#unicode-literals" class="headerlink" title="unicode_literals"></a>unicode_literals</h2><h3 id="UnicodeEncodeError"><a href="#UnicodeEncodeError" class="headerlink" title="UnicodeEncodeError"></a>UnicodeEncodeError</h3><p>我们对上面的代码做一些修改:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> unicode_literals</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, grade)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.grade = grade</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'&#123;0&#125;(&#123;1&#125;)'</span>.format(self.name, self.grade)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'&lt;Student&gt;'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__unicode__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">'&lt;Student&gt;'</span></div></pre></td></tr></table></figure>
-<p>改动在于import了<a href="https://docs.python.org/2/reference/datamodel.html#object.__unicode__" target="_blank" rel="external"><code>unicode_literals</code></a>, 并为 <code>Student</code> 添加了一个 <code>__unicode__</code> 方法, 看起来好像没有什么问题。 但当你实例化一个 <code>Student</code> , 并将 <code>name</code> 指定为中文时:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">student = Student(name=<span class="string">'罗伊'</span>, grade=<span class="number">11</span>)</div><div class="line"><span class="keyword">print</span> student</div></pre></td></tr></table></figure>
-<p>报错了, <code>UnicodeEncodeError</code> 。 你或许精通python2的中文编码问题, 但也许并没有注意到这个问题。<br>在使用django时遇到过 <code>[Bad Unicode data]</code> 这个东西, 问题是一样的, django在项目中也使用了 <code>unicode_literals</code> 。</p>
-<h3 id="问题在哪"><a href="#问题在哪" class="headerlink" title="问题在哪"></a>问题在哪</h3><p>问题在于 <code>object.__str__</code> 返回的必须为string object, 而使用 <code>unicode_literals</code> 之后返回的为unicode object, python2解释器会尝试用默认的编码(ascii)对其进行encode, 所以报错。</p>
-<h3 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h3><p><code>unicode_literals</code> 在python2中是个利器, 不能不用。<br>接下来我们用两种方法来解决上面这个问题。</p>
-<h4 id="patch"><a href="#patch" class="headerlink" title="patch"></a>patch</h4><p>这是一种经典的方法:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf8'</span>)</div></pre></td></tr></table></figure>
-<p>重载 <code>sys</code> 并将 <code>defaultencoding</code> 从 <code>ascii</code> 修改为 <code>utf-8</code> , 对含中文的unicode object使用utf-8进行encode是可行的。</p>
-<h4 id="装饰器"><a href="#装饰器" class="headerlink" title="装饰器"></a>装饰器</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">force_encoded_string_output</span><span class="params">(func)</span>:</span></div><div class="line">    <span class="keyword">if</span> sys.version_info.major &lt; <span class="number">3</span>:</div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">_func</span><span class="params">(*args, **kwargs)</span>:</span></div><div class="line">            <span class="keyword">return</span> func(*args, **kwargs).encode(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line">        <span class="keyword">return</span> _func</div><div class="line"></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> func</div></pre></td></tr></table></figure>
-<p>使用 <code>force_encoded_string_output</code> 装饰 <code>object.__str__</code> 即可, 解决的思路和上面类似。</p>
-<h3 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h3><p>当你在python2中同时使用中文, <code>unicode_literals</code>, <code>__str__</code>, <code>__unicode__</code> 可以考虑下面的方式:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> unicode_literals</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Best</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> unicode(self).encode(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__unicode__</span><span class="params">(self)</span>:</span></div><div class="line">        s = <span class="string">'Put your data here.'</span> </div><div class="line">        <span class="keyword">assert</span> isinstance(s, unicode)</div><div class="line">        <span class="keyword">return</span> s</div></pre></td></tr></table></figure>
-
+        <h2 id="str-和-repr"><a href="#str-和-repr" class="headerlink" title="__str__ 和 __repr__"></a>__str__ 和 __repr__</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><a href="https://docs.python.org/2/reference/datamodel.html#object.__str__"><code>object.__str__</code></a>是python中一个常见的特殊方法, 会被内置函数被 <code>str</code> 和 <code>print</code> 调用。<br>常常与它一起出现的还有<a href="https://docs.python.org/2/reference/datamodel.html#object.__repr__"><code>object.__repr__</code></a>, 类似地, 它会被内置函数 <code>repr</code> 调用。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/08/31/从__str__说开去/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://hopperclouds.github.io/2016/08/31/从__str__说开去/" data-id="cisu9i8bl000azasq9l4joroj" class="article-share-link" data-share="baidu" data-title="从__str__说开去">分享到</a>
+        <a data-url="http://hopperclouds.github.io/2016/08/31/从__str__说开去/" data-id="ciu3ixcbd000srjsq3bfcn6k8" class="article-share-link" data-share="baidu" data-title="从__str__说开去">分享到</a>
       
 
       
@@ -744,132 +606,6 @@
 
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kxrr/">Kxrr</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/str/">str</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unicode-literals/">unicode_literals</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-前端入门之我见" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/08/30/前端入门之我见/" class="article-date">
-  <time datetime="2016-08-30T14:48:37.000Z" itemprop="datePublished">2016-08-30</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/blog/">blog</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/30/前端入门之我见/">前端入门之我见</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>作者：Adam at 2016-08-30 22:48:37</p>
-<p>这两周陆陆续续进行了两个独立的前端项目，一个是前后端分离的Angular项目，一个是ES6+Nodejs的全栈项目，前者先做，后者差不多刚完成，最明显的感觉就是写了Angular不想写JQuery，写了ES6不想写ES5。</p>
-<p>我就在想，为什么会有这么强烈感觉？是什么导致的？</p>
-<p>首先，我们来看看前端主要做什么？</p>
-<p>一是页面：HTML+CSS样式布局；<br>二是Javascript脚本：根据页面事件响应、控制页面逻辑。</p>
-<p>就这么简单。</p>
-<p>然后，CSS样式多了，Javascript函数多了，我们就希望代码好维护，方便调用，少写代码，于是就出现了各种CSS／Javascript框架。</p>
-<p>随之而来的问题也出现了，逻辑变复杂，这就需要我们把注释要写清楚，甚至完全文档化。</p>
-<p>Javascript写法太自由了，写出来效果往往容易有bug，加上不同浏览器的、不同终端的折腾，好吧，我们把单元测试、界面测试补上，这下总可以了吧。</p>
-<p>但是，问题并没有结束。</p>
-<p>我们开始思考Javascript是否真的适合写前端页面，为什么Javascript写大型项目这么痛苦？为什么要不断重复写写登录注册？为什么要离不开for循环？为什么不能尽可能高的重用代码？</p>
-<p>我们很早就在说OOP、MVC，也有现在的MVVM、SAM，也出了不少经典框架，但Javascript始终还是Javascript，没有class，没有isArray，只有说不清道不明的 <code>prototype</code> 和 <code>__proto__</code> 。既然我们知道什么样的语法简洁高效，为什么不让Javascript也能这么做呢？所以，Type Script出来了，Webpack/Babel出来了，ES6出来了。</p>
-<p>所以，如果现在你想学前端，直接写ES6吧，有了webpack和babel，以前能做的现在都能做，现在能做的，以前不一定能做。</p>
-<p>如今前端也再也不是写写页面、做做脚本，不再是网页三剑客的时代。你还需要精通Sublime/Vim这些编辑器，会架构前端开发环境、熟悉Nodejs/NPM，掌握Phantomjs/Jasmine等测试手段，会用JsDoc写文档。当然，最重要的还是要学好ES6。</p>
-<p>最后，我总结一下我学习ES6后，发现的一些好处，希望和大家多交流、沟通～</p>
-<ul>
-<li>OOP的原配Class，写起来的酸爽倍儿棒只有自己知道</li>
-<li>模块化导入，让我可以前后端共享代码</li>
-<li>函数参数的扩展是我的最爱，直接让我轻松20%</li>
-<li>代码密集度明显好于过去，这是密集恐惧症的福音</li>
-<li>Webpack无疑是前端开发自动化的必备神器，你值得拥有～</li>
-<li>你不再需要模版语言，ES6就是最好的模版语言</li>
-<li>一切皆Js，HTML是，CSS也是</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://hopperclouds.github.io/2016/08/30/前端入门之我见/" data-id="cisu9i8bn000czasq9vwallko" class="article-share-link" data-share="baidu" data-title="前端入门之我见">分享到</a>
-      
-
-      
-        <a href="http://hopperclouds.github.io/2016/08/30/前端入门之我见/#disqus_thread" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ES6/">ES6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/经验总结/">经验总结</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-聘宝招聘Python实习生" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/29/聘宝招聘Python实习生/" class="article-date">
-  <time datetime="2015-09-29T02:51:04.000Z" itemprop="datePublished">2015-09-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/招聘/">招聘</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/29/聘宝招聘Python实习生/">聘宝招聘Python实习生</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="公司情况"><a href="#公司情况" class="headerlink" title="公司情况"></a>公司情况</h1><p>现在主要做的产品是 <a href="http://www.pinbot.me/">http://www.pinbot.me/</a> ,已经拿到A轮</p>
-<p>坐标：四川成都高新区府城大道399天府新谷9号楼二单元1505成都浩泊云动科技有限公司</p>
-        
-          <p class="article-more-link">
-            <a href="/2015/09/29/聘宝招聘Python实习生/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://hopperclouds.github.io/2015/09/29/聘宝招聘Python实习生/" data-id="cisu9i8bx000lzasqrz29ovir" class="article-share-link" data-share="baidu" data-title="聘宝招聘Python实习生">分享到</a>
-      
-
-      
-        <a href="http://hopperclouds.github.io/2015/09/29/聘宝招聘Python实习生/#disqus_thread" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/招聘/">招聘</a></li></ul>
 
     </footer>
   </div>
@@ -891,7 +627,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/django/">django</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/招聘/">招聘</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/搜索引擎/">搜索引擎</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/UML/">UML</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/django/">django</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/招聘/">招聘</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/搜索引擎/">搜索引擎</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -900,7 +636,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kxrr/">Kxrr</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache-lucene/">apache lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/">django</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyspark/">pyspark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/str/">str</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unicode-literals/">unicode_literals</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/其他/">其他</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/招聘/">招聘</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索引擎/">搜索引擎</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/经验总结/">经验总结</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运维/">运维</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kxrr/">Kxrr</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nodejs/">Nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotImplemented/">NotImplemented</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ORM/">ORM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache-lucene/">apache lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/">django</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyspark/">pyspark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/str/">str</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unicode-literals/">unicode_literals</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/其他/">其他</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/招聘/">招聘</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索引擎/">搜索引擎</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/经验总结/">经验总结</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运维/">运维</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面向对象/">面向对象</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -909,7 +645,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Kxrr/" style="font-size: 10px;">Kxrr</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/apache-lucene/" style="font-size: 10px;">apache lucene</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/pyspark/" style="font-size: 10px;">pyspark</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/str/" style="font-size: 10px;">str</a> <a href="/tags/unicode-literals/" style="font-size: 10px;">unicode_literals</a> <a href="/tags/其他/" style="font-size: 10px;">其他</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/技术/" style="font-size: 10px;">技术</a> <a href="/tags/招聘/" style="font-size: 10px;">招聘</a> <a href="/tags/搜索引擎/" style="font-size: 10px;">搜索引擎</a> <a href="/tags/经验总结/" style="font-size: 10px;">经验总结</a> <a href="/tags/运维/" style="font-size: 10px;">运维</a>
+      <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Kxrr/" style="font-size: 10px;">Kxrr</a> <a href="/tags/Nodejs/" style="font-size: 10px;">Nodejs</a> <a href="/tags/NotImplemented/" style="font-size: 10px;">NotImplemented</a> <a href="/tags/ORM/" style="font-size: 10px;">ORM</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/apache-lucene/" style="font-size: 10px;">apache lucene</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/javascript/" style="font-size: 15px;">javascript</a> <a href="/tags/pyspark/" style="font-size: 10px;">pyspark</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/str/" style="font-size: 10px;">str</a> <a href="/tags/unicode-literals/" style="font-size: 10px;">unicode_literals</a> <a href="/tags/其他/" style="font-size: 10px;">其他</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/技术/" style="font-size: 10px;">技术</a> <a href="/tags/招聘/" style="font-size: 10px;">招聘</a> <a href="/tags/搜索引擎/" style="font-size: 10px;">搜索引擎</a> <a href="/tags/经验总结/" style="font-size: 10px;">经验总结</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/运维/" style="font-size: 15px;">运维</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
     </div>
   </div>
 
@@ -918,7 +654,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -930,7 +666,11 @@
       <ul>
         
           <li>
-            <a href="/2016/09/08/openvpn/">(no title)</a>
+            <a href="/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/">Nodejs ORM框架Sequelizejs快速入门</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/08/OpenVPN服务部署使用/">OpenVPN服务部署使用</a>
           </li>
         
           <li>
@@ -938,15 +678,11 @@
           </li>
         
           <li>
+            <a href="/2016/09/07/从程序员到架构师的成长之路/">从程序员到架构师的成长之路</a>
+          </li>
+        
+          <li>
             <a href="/2016/09/06/react入门介绍/">react入门介绍</a>
-          </li>
-        
-          <li>
-            <a href="/2016/09/02/Python-Web并发重复数据防守策略/">Python-Web并发重复数据防守策略</a>
-          </li>
-        
-          <li>
-            <a href="/2016/09/02/JavaScript之递归/">JavaScript之递归</a>
           </li>
         
       </ul>
@@ -1043,7 +779,7 @@
 
 <!-- 百度分享 end -->
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 
 
   <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">

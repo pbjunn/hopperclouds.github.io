@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Nodejs ORM框架Sequelizejs快速入门 | 聘宝研发</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="作者: Adam
+什么是ORM？简单的讲就是对SQL查询语句的封装，让我们可以用OOP的方式操作数据库，优雅的生成安全、可维护的SQL代码。直观上，是一种Model和SQL的映射关系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs ORM框架Sequelizejs快速入门">
+<meta property="og:url" content="http://hopperclouds.github.io/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/index.html">
+<meta property="og:site_name" content="聘宝研发">
+<meta property="og:description" content="作者: Adam
+什么是ORM？简单的讲就是对SQL查询语句的封装，让我们可以用OOP的方式操作数据库，优雅的生成安全、可维护的SQL代码。直观上，是一种Model和SQL的映射关系。">
+<meta property="og:updated_time" content="2016-10-10T03:46:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs ORM框架Sequelizejs快速入门">
+<meta name="twitter:description" content="作者: Adam
+什么是ORM？简单的讲就是对SQL查询语句的封装，让我们可以用OOP的方式操作数据库，优雅的生成安全、可维护的SQL代码。直观上，是一种Model和SQL的映射关系。">
+  
+    <link rel="alternative" href="/atom.xml" title="聘宝研发" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="//cdn.bootcss.com/font-awesome/4.1.0/css/font-awesome.min.css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">聘宝研发</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一群有追求的人</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="hopperclouds.github.io">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="outer">
+      <section id="main"><article id="post-Nodejs-ORM框架Sequelizejs快速入门" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/" class="article-date">
+  <time datetime="2016-09-12T15:10:10.000Z" itemprop="datePublished">2016-09-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Nodejs ORM框架Sequelizejs快速入门
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>作者: Adam</p>
+<h2 id="什么是ORM？"><a href="#什么是ORM？" class="headerlink" title="什么是ORM？"></a>什么是<code>ORM</code>？</h2><p>简单的讲就是对<code>SQL</code>查询语句的封装，让我们可以用<code>OOP</code>的方式操作数据库，优雅的生成安全、可维护的<code>SQL</code>代码。直观上，是一种<code>Model</code>和<code>SQL</code>的映射关系。</p>
+<a id="more"></a>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> User = sequelize.define(<span class="string">'user'</span>, &#123;</div><div class="line">    id: &#123;</div><div class="line">        type: Sequelize.INTEGER,</div><div class="line">        allowNull: <span class="literal">false</span>,</div><div class="line">        autoIncrement: <span class="literal">true</span>,</div><div class="line">        primaryKey: <span class="literal">true</span></div><div class="line">    &#125;,</div><div class="line">    email: &#123;</div><div class="line">        type: Sequelize.STRING,</div><div class="line">        allowNull: <span class="literal">false</span>,</div><div class="line">        validate: &#123;</div><div class="line">            isEmail: <span class="literal">true</span></div><div class="line">        &#125;,</div><div class="line">        unique: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> <span class="string">`users`</span> (</div><div class="line">  <span class="string">`id`</span> <span class="built_in">INTEGER</span> PRIMARY <span class="keyword">KEY</span> AUTOINCREMENT,</div><div class="line">  <span class="string">`email`</span> <span class="built_in">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">UNIQUE</span></div><div class="line">  <span class="string">`createdAt`</span> DATETIME <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">  <span class="string">`updatedAt`</span> DATETIME <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">  <span class="keyword">UNIQUE</span> (email)</div><div class="line">);</div></pre></td></tr></table></figure>
+<h2 id="那么什么是Sequelize？"><a href="#那么什么是Sequelize？" class="headerlink" title="那么什么是Sequelize？"></a>那么什么是Sequelize？</h2><p>Sequelize是一款基于Nodejs功能强大的异步ORM框架。<br>同时支持PostgreSQL, MySQL, SQLite and MSSQL多种数据库，很适合作为Nodejs后端数据库的存储接口，为快速开发Nodejs应用奠定扎实、安全的基础。</p>
+<p>既然Nodejs的强项在于异步，没有理由不找一个强大的支持异步的数据库框架，与之配合，双剑合并～</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//引入框架</span></div><div class="line"><span class="keyword">var</span> Sequelize = <span class="built_in">require</span>(<span class="string">'sequelize'</span>);</div><div class="line"><span class="comment">//初始化链接（支持连接池）</span></div><div class="line"><span class="keyword">var</span> sequelize = <span class="keyword">new</span> Sequelize(<span class="string">'database'</span>, <span class="string">'username'</span>, <span class="string">'password'</span>,  &#123;</div><div class="line">  host: <span class="string">'localhost'</span>,</div><div class="line">  dialect: <span class="string">'mysql'</span>|<span class="string">'sqlite'</span>|<span class="string">'postgres'</span>|<span class="string">'mssql'</span>,</div><div class="line"></div><div class="line">  pool: &#123;</div><div class="line">    max: <span class="number">5</span>,</div><div class="line">    min: <span class="number">0</span>,</div><div class="line">    idle: <span class="number">10000</span></div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  <span class="comment">// SQLite only</span></div><div class="line">  storage: <span class="string">'path/to/database.sqlite'</span></div><div class="line">&#125;);</div><div class="line"><span class="comment">//定义数据模型</span></div><div class="line"><span class="keyword">var</span> User = sequelize.define(<span class="string">'user'</span>, &#123;</div><div class="line">  username: Sequelize.STRING,</div><div class="line">  birthday: Sequelize.DATE</div><div class="line">&#125;);</div><div class="line"><span class="comment">//初始化数据</span></div><div class="line">sequelize.sync().then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> User.create(&#123;</div><div class="line">    username: <span class="string">'janedoe'</span>,</div><div class="line">    birthday: <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="number">1980</span>, <span class="number">6</span>, <span class="number">20</span>)</div><div class="line">  &#125;);</div><div class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">jane</span>) </span>&#123;</div><div class="line">  <span class="comment">//获取数据</span></div><div class="line">  <span class="built_in">console</span>.log(jane.get(&#123;</div><div class="line">    plain: <span class="literal">true</span></div><div class="line">  &#125;));</div><div class="line">&#125;).catch(<span class="function"><span class="keyword">function</span> (<span class="params">err</span>) </span>&#123;</div><div class="line">  <span class="comment">//异常捕获</span></div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Unable to connect to the database:'</span>, err);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="Sequelize有哪些特色？"><a href="#Sequelize有哪些特色？" class="headerlink" title="Sequelize有哪些特色？"></a>Sequelize有哪些特色？</h2><blockquote>
+<p>强大的模型定义，支持虚拟类型。Javascript虽然被很多人诟病杂乱无章法，但是函数即对象这个特色，可以说是我的最爱，非常灵活强大。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Foo = sequelize.define(<span class="string">'foo'</span>, &#123;</div><div class="line">  firstname: Sequelize.STRING,</div><div class="line">  lastname: Sequelize.STRING</div><div class="line">&#125;, &#123;</div><div class="line">  getterMethods   : &#123;</div><div class="line">    fullName       : <span class="function"><span class="keyword">function</span>(<span class="params"></span>)  </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.firstname + <span class="string">' '</span> + <span class="keyword">this</span>.lastname &#125;</div><div class="line">  &#125;,</div><div class="line">  setterMethods   : &#123;</div><div class="line">    fullName       : <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> names = value.split(<span class="string">' '</span>);</div><div class="line">        <span class="keyword">this</span>.setDataValue(<span class="string">'firstname'</span>, names.slice(<span class="number">0</span>, <span class="number">-1</span>).join(<span class="string">' '</span>));</div><div class="line">        <span class="keyword">this</span>.setDataValue(<span class="string">'lastname'</span>, names.slice(<span class="number">-1</span>).join(<span class="string">' '</span>));</div><div class="line">    &#125;,</div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>支持完善的数据验证，减轻前后端的验证压力。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> ValidateMe = sequelize.define(<span class="string">'foo'</span>, &#123;</div><div class="line">  foo: &#123;</div><div class="line">    type: Sequelize.STRING,</div><div class="line">    validate: &#123;</div><div class="line">      is: [<span class="string">"^[a-z]+$"</span>,<span class="string">'i'</span>],     <span class="comment">// 全匹配字母</span></div><div class="line">      is: <span class="regexp">/^[a-z]+$/i</span>,          <span class="comment">// 全匹配字母，用规则表达式写法</span></div><div class="line">      not: [<span class="string">"[a-z]"</span>,<span class="string">'i'</span>],       <span class="comment">// 不能包含字母</span></div><div class="line">      isEmail: <span class="literal">true</span>,            <span class="comment">// 检查邮件格式</span></div><div class="line">      isUrl: <span class="literal">true</span>,              <span class="comment">// 是否是合法网址</span></div><div class="line">      isIP: <span class="literal">true</span>,               <span class="comment">// 是否是合法IP地址</span></div><div class="line">      isIPv4: <span class="literal">true</span>,             <span class="comment">// 是否是合法IPv4地址</span></div><div class="line">      isIPv6: <span class="literal">true</span>,             <span class="comment">// 是否是合法IPv6地址</span></div><div class="line">      isAlpha: <span class="literal">true</span>,            <span class="comment">// 是否是字母</span></div><div class="line">      isAlphanumeric: <span class="literal">true</span>,     <span class="comment">// 是否是数字和字母</span></div><div class="line">      isNumeric: <span class="literal">true</span>,          <span class="comment">// 只允许数字</span></div><div class="line">      isInt: <span class="literal">true</span>,              <span class="comment">// 只允许整数</span></div><div class="line">      isFloat: <span class="literal">true</span>,            <span class="comment">// 是否是浮点数</span></div><div class="line">      isDecimal: <span class="literal">true</span>,          <span class="comment">// 是否是十进制书</span></div><div class="line">      isLowercase: <span class="literal">true</span>,        <span class="comment">// 是否是小写</span></div><div class="line">      isUppercase: <span class="literal">true</span>,        <span class="comment">// 是否大写</span></div><div class="line">      notNull: <span class="literal">true</span>,            <span class="comment">// 不允许为null</span></div><div class="line">      isNull: <span class="literal">true</span>,             <span class="comment">// 是否是null</span></div><div class="line">      notEmpty: <span class="literal">true</span>,           <span class="comment">// 不允许为空</span></div><div class="line">      equals: <span class="string">'specific value'</span>, <span class="comment">// 等于某些值</span></div><div class="line">      contains: <span class="string">'foo'</span>,          <span class="comment">// 包含某些字符</span></div><div class="line">      notIn: [[<span class="string">'foo'</span>, <span class="string">'bar'</span>]],  <span class="comment">// 不在列表中</span></div><div class="line">      isIn: [[<span class="string">'foo'</span>, <span class="string">'bar'</span>]],   <span class="comment">// 在列表中</span></div><div class="line">      notContains: <span class="string">'bar'</span>,       <span class="comment">// 不包含</span></div><div class="line">      len: [<span class="number">2</span>,<span class="number">10</span>],              <span class="comment">// 长度范围</span></div><div class="line">      isUUID: <span class="number">4</span>,                <span class="comment">// 是否是合法 uuids</span></div><div class="line">      isDate: <span class="literal">true</span>,             <span class="comment">// 是否是有效日期</span></div><div class="line">      isAfter: <span class="string">"2011-11-05"</span>,    <span class="comment">// 是否晚于某个日期</span></div><div class="line">      isBefore: <span class="string">"2011-11-05"</span>,   <span class="comment">// 是否早于某个日期</span></div><div class="line">      max: <span class="number">23</span>,                  <span class="comment">// 最大值</span></div><div class="line">      min: <span class="number">23</span>,                  <span class="comment">// 最小值</span></div><div class="line">      isArray: <span class="literal">true</span>,            <span class="comment">// 是否是数组</span></div><div class="line">      isCreditCard: <span class="literal">true</span>,       <span class="comment">// 是否是有效信用卡号</span></div><div class="line"></div><div class="line">      <span class="comment">// 自定义规则</span></div><div class="line">      isEven: <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="built_in">parseInt</span>(value) % <span class="number">2</span> != <span class="number">0</span>) &#123;</div><div class="line">          <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'请输入偶数!'</span>)</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Sequelize的查询非常全面和灵活</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line">Project.findAll(&#123;</div><div class="line">  <span class="comment">//复杂过滤，可嵌套</span></div><div class="line">  where: &#123;</div><div class="line">    id: &#123;</div><div class="line">      $and: &#123;a: <span class="number">5</span>&#125;           <span class="comment">// AND (a = 5)</span></div><div class="line">      $or: [&#123;a: <span class="number">5</span>&#125;, &#123;a: <span class="number">6</span>&#125;]  <span class="comment">// (a = 5 OR a = 6)</span></div><div class="line">      $gt: <span class="number">6</span>,                <span class="comment">// id &gt; 6</span></div><div class="line">      $gte: <span class="number">6</span>,               <span class="comment">// id &gt;= 6</span></div><div class="line">      $lt: <span class="number">10</span>,               <span class="comment">// id &lt; 10</span></div><div class="line">      $lte: <span class="number">10</span>,              <span class="comment">// id &lt;= 10</span></div><div class="line">      $ne: <span class="number">20</span>,               <span class="comment">// id != 20</span></div><div class="line">      $between: [<span class="number">6</span>, <span class="number">10</span>],     <span class="comment">// BETWEEN 6 AND 10</span></div><div class="line">      $notBetween: [<span class="number">11</span>, <span class="number">15</span>], <span class="comment">// NOT BETWEEN 11 AND 15</span></div><div class="line">      $<span class="keyword">in</span>: [<span class="number">1</span>, <span class="number">2</span>],           <span class="comment">// IN [1, 2]</span></div><div class="line">      $notIn: [<span class="number">1</span>, <span class="number">2</span>],        <span class="comment">// NOT IN [1, 2]</span></div><div class="line">      $like: <span class="string">'%hat'</span>,         <span class="comment">// LIKE '%hat'</span></div><div class="line">      $notLike: <span class="string">'%hat'</span>       <span class="comment">// NOT LIKE '%hat'</span></div><div class="line">      $iLike: <span class="string">'%hat'</span>         <span class="comment">// ILIKE '%hat' (case insensitive)  (PG only)</span></div><div class="line">      $notILike: <span class="string">'%hat'</span>      <span class="comment">// NOT ILIKE '%hat'  (PG only)</span></div><div class="line">      $overlap: [<span class="number">1</span>, <span class="number">2</span>]       <span class="comment">// &amp;&amp; [1, 2] (PG array overlap operator)</span></div><div class="line">      $contains: [<span class="number">1</span>, <span class="number">2</span>]      <span class="comment">// @&gt; [1, 2] (PG array contains operator)</span></div><div class="line">      $contained: [<span class="number">1</span>, <span class="number">2</span>]     <span class="comment">// &lt;@ [1, 2] (PG array contained by operator)</span></div><div class="line">      $any: [<span class="number">2</span>,<span class="number">3</span>]            <span class="comment">// ANY ARRAY[2, 3]::INTEGER (PG only)</span></div><div class="line">    &#125;,</div><div class="line">    status: &#123;</div><div class="line">      $not: <span class="literal">false</span>,           <span class="comment">// status NOT FALSE</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)</div><div class="line">Project.all()</div><div class="line">Project.findById</div><div class="line">Project.findByOne</div><div class="line">Project.findOrCreate</div><div class="line">Project.findAndCountAll</div><div class="line"></div><div class="line">Project.count()</div><div class="line">Project.max()</div><div class="line"></div><div class="line"><span class="comment">//CRUD</span></div><div class="line">Project.create()</div><div class="line">Project.save()</div><div class="line">Project.update()</div><div class="line">Project.destroy()</div><div class="line"></div><div class="line"><span class="comment">//批量</span></div><div class="line">User.bulkCreate([])</div><div class="line"></div><div class="line"><span class="comment">//排序</span></div><div class="line">something.findOne(&#123;</div><div class="line">  order: [</div><div class="line">    <span class="string">'name'</span>,</div><div class="line">    <span class="comment">// 返回 `name`</span></div><div class="line">    <span class="string">'username DESC'</span>,</div><div class="line">    <span class="comment">// 返回 `username DESC`</span></div><div class="line">    [<span class="string">'username'</span>, <span class="string">'DESC'</span>],</div><div class="line">    <span class="comment">// 返回 `username` DESC</span></div><div class="line">    sequelize.fn(<span class="string">'max'</span>, sequelize.col(<span class="string">'age'</span>)),</div><div class="line">    <span class="comment">// 返回 max(`age`)</span></div><div class="line">    [sequelize.fn(<span class="string">'max'</span>, sequelize.col(<span class="string">'age'</span>)), <span class="string">'DESC'</span>],</div><div class="line">    <span class="comment">// 返回 max(`age`) DESC</span></div><div class="line">    [sequelize.fn(<span class="string">'otherfunction'</span>, sequelize.col(<span class="string">'col1'</span>), <span class="number">12</span>, <span class="string">'lalala'</span>), <span class="string">'DESC'</span>],</div><div class="line">    <span class="comment">// 返回 otherfunction(`col1`, 12, 'lalala') DESC</span></div><div class="line">    [sequelize.fn(<span class="string">'otherfunction'</span>, sequelize.fn(<span class="string">'awesomefunction'</span>, sequelize.col(<span class="string">'col'</span>))), <span class="string">'DESC'</span>]</div><div class="line">    <span class="comment">// 返回 otherfunction(awesomefunction(`col`)) DESC, 有可能是无限循环</span></div><div class="line">    [&#123; raw: <span class="string">'otherfunction(awesomefunction(`col`))'</span> &#125;, <span class="string">'DESC'</span>]</div><div class="line">    <span class="comment">// 也可以这样写</span></div><div class="line">  ]</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// 分页查询</span></div><div class="line">Project.findAll(&#123; limit: <span class="number">10</span> &#125;)</div><div class="line">Project.findAll(&#123; offset: <span class="number">8</span> &#125;)</div><div class="line">Project.findAll(&#123; offset: <span class="number">5</span>, limit: <span class="number">5</span> &#125;)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>关联查询 <code>include</code> 支持嵌套，这可能是<code>ORM</code>里面最难的部分。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> User = sequelize.define(<span class="string">'user'</span>, &#123; name: Sequelize.STRING &#125;)</div><div class="line">  , Task = sequelize.define(<span class="string">'task'</span>, &#123; name: Sequelize.STRING &#125;)</div><div class="line">  , Tool = sequelize.define(<span class="string">'tool'</span>, &#123; name: Sequelize.STRING &#125;)</div><div class="line"></div><div class="line">Task.belongsTo(User) <span class="comment">// 增加外键属性 UserId 到 Task</span></div><div class="line">User.hasMany(Task) <span class="comment">// 给 Task 增加外键属性 userId</span></div><div class="line">User.hasMany(Tool, &#123; <span class="keyword">as</span>: <span class="string">'Instruments'</span> &#125;) <span class="comment">// 给 Task 增加自定义外键属性 InstrumentsId</span></div><div class="line"></div><div class="line">Task.findAll(&#123; include: [ User ] &#125;)</div><div class="line">User.findAll(&#123; include: [&#123;</div><div class="line">    model: Tool,</div><div class="line">    <span class="keyword">as</span>: <span class="string">'Instruments'</span>,</div><div class="line">    where: &#123; name: &#123; $like: <span class="string">'%ooth%'</span> &#125; &#125;</div><div class="line">&#125;] &#125;)</div><div class="line">User.findAll(&#123; include: [<span class="string">'Instruments'</span>] &#125;)</div><div class="line"></div><div class="line"><span class="keyword">var</span> User = <span class="keyword">this</span>.sequelize.define(<span class="string">'user'</span>, &#123;<span class="comment">/* attributes */</span>&#125;, &#123;underscored: <span class="literal">true</span>&#125;)</div><div class="line">  , Company  = <span class="keyword">this</span>.sequelize.define(<span class="string">'company'</span>, &#123;</div><div class="line">    uuid: &#123;</div><div class="line">      type: Sequelize.UUID,</div><div class="line">      primaryKey: <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">User.belongsTo(Company); <span class="comment">// 增加 company_uuid 外键属性到 user</span></div><div class="line">User.belongsTo(UserRole, &#123;<span class="keyword">as</span>: <span class="string">'role'</span>&#125;);</div><div class="line"><span class="comment">// 自定义外键属性 roleId 到 user 而不是 userRoleId</span></div><div class="line"></div><div class="line">User.belongsTo(Company, &#123;foreignKey: <span class="string">'fk_companyname'</span>, targetKey: <span class="string">'name'</span>&#125;); <span class="comment">// 增加自定义外键属性 fk_companyname 到 User</span></div><div class="line">Person.hasOne(Person, &#123;<span class="keyword">as</span>: <span class="string">'Father'</span>, foreignKey: <span class="string">'DadId'</span>&#125;)</div><div class="line"><span class="comment">// Person 增加外键属性 DadId</span></div><div class="line"></div><div class="line">Coach.hasOne(Team)  <span class="comment">// `coachId` 作为 Team 的外键属性</span></div><div class="line"></div><div class="line">Project.hasMany(User, &#123;<span class="keyword">as</span>: <span class="string">'Workers'</span>&#125;)</div><div class="line"><span class="comment">// 给 User 增加外键属性 projectId ／ project_id</span></div><div class="line"></div><div class="line">Project.belongsToMany(User, &#123;through: <span class="string">'UserProject'</span>&#125;);</div><div class="line">User.belongsToMany(Project, &#123;through: <span class="string">'UserProject'</span>&#125;);</div><div class="line"><span class="comment">// 创建新的模型: UserProject 包含外键属性：projectId 和 userId</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p><code>Sequelize</code>还有完善的迁移同步数据方案,<code>migrate so easy</code>。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//$ sequelize db:migrate //用命令直接生成模版脚本，接下来的还是写js</div><div class="line">module.exports = &#123;</div><div class="line">  up: function(queryInterface, Sequelize) &#123;</div><div class="line">    // 需要修改数据库的操作</div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  down: function(queryInterface, Sequelize) &#123;</div><div class="line">    // 取消修改的操作</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>好的，快餐吃到这里，希望大家喜欢<code>nodejs</code>，能够快速开发<code>Node App</code>～</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://hopperclouds.github.io/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/" data-id="ciu3ixcac0000rjsq4d7q9xpx" class="article-share-link" data-share="baidu" data-title="Nodejs ORM框架Sequelizejs快速入门">分享到</a>
+      
+
+      
+        <a href="http://hopperclouds.github.io/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/#disqus_thread" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nodejs/">Nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ORM/">ORM</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/09/08/OpenVPN服务部署使用/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">OpenVPN服务部署使用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/UML/">UML</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/django/">django</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/招聘/">招聘</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/搜索引擎/">搜索引擎</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kxrr/">Kxrr</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nodejs/">Nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotImplemented/">NotImplemented</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ORM/">ORM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache-lucene/">apache lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/">django</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyspark/">pyspark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/str/">str</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unicode-literals/">unicode_literals</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/其他/">其他</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/招聘/">招聘</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索引擎/">搜索引擎</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/经验总结/">经验总结</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运维/">运维</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面向对象/">面向对象</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Kxrr/" style="font-size: 10px;">Kxrr</a> <a href="/tags/Nodejs/" style="font-size: 10px;">Nodejs</a> <a href="/tags/NotImplemented/" style="font-size: 10px;">NotImplemented</a> <a href="/tags/ORM/" style="font-size: 10px;">ORM</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/apache-lucene/" style="font-size: 10px;">apache lucene</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/javascript/" style="font-size: 15px;">javascript</a> <a href="/tags/pyspark/" style="font-size: 10px;">pyspark</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/str/" style="font-size: 10px;">str</a> <a href="/tags/unicode-literals/" style="font-size: 10px;">unicode_literals</a> <a href="/tags/其他/" style="font-size: 10px;">其他</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/技术/" style="font-size: 10px;">技术</a> <a href="/tags/招聘/" style="font-size: 10px;">招聘</a> <a href="/tags/搜索引擎/" style="font-size: 10px;">搜索引擎</a> <a href="/tags/经验总结/" style="font-size: 10px;">经验总结</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/运维/" style="font-size: 15px;">运维</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/">Nodejs ORM框架Sequelizejs快速入门</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/08/OpenVPN服务部署使用/">OpenVPN服务部署使用</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/08/django自定义storage/">django自定义storage</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/07/从程序员到架构师的成长之路/">从程序员到架构师的成长之路</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/06/react入门介绍/">react入门介绍</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="" target="_blank">聘宝产品</a>
+          </li>
+        
+          <li>
+            <a href="" target="_blank">runforever github</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 聘宝研发<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'hopperclouds';
+  
+  var disqus_url = 'http://hopperclouds.github.io/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

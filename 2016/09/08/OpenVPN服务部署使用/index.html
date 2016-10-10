@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>OpenVPN服务部署使用 | 聘宝研发</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="作者：liudong at 2016-09-08 20:00:00
+OpenVPN服务部署使用1 服务端部署（Ubuntu）1.1 安装OpenVPN 所需插件1234$ sudo apt-get install openssl$ sudo apt-get install libssl-dev$ sudo apt-get install libpam0g-dev$ sudo apt-get ins">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenVPN服务部署使用">
+<meta property="og:url" content="http://hopperclouds.github.io/2016/09/08/OpenVPN服务部署使用/index.html">
+<meta property="og:site_name" content="聘宝研发">
+<meta property="og:description" content="作者：liudong at 2016-09-08 20:00:00
+OpenVPN服务部署使用1 服务端部署（Ubuntu）1.1 安装OpenVPN 所需插件1234$ sudo apt-get install openssl$ sudo apt-get install libssl-dev$ sudo apt-get install libpam0g-dev$ sudo apt-get ins">
+<meta property="og:updated_time" content="2016-10-10T03:55:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenVPN服务部署使用">
+<meta name="twitter:description" content="作者：liudong at 2016-09-08 20:00:00
+OpenVPN服务部署使用1 服务端部署（Ubuntu）1.1 安装OpenVPN 所需插件1234$ sudo apt-get install openssl$ sudo apt-get install libssl-dev$ sudo apt-get install libpam0g-dev$ sudo apt-get ins">
+  
+    <link rel="alternative" href="/atom.xml" title="聘宝研发" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="//cdn.bootcss.com/font-awesome/4.1.0/css/font-awesome.min.css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]--><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">聘宝研发</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一群有追求的人</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="hopperclouds.github.io">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="outer">
+      <section id="main"><article id="post-OpenVPN服务部署使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/08/OpenVPN服务部署使用/" class="article-date">
+  <time datetime="2016-09-08T12:00:00.000Z" itemprop="datePublished">2016-09-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/blog/">blog</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      OpenVPN服务部署使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>作者：liudong at 2016-09-08 20:00:00</p>
+<p>OpenVPN服务部署使用<br>1 服务端部署（Ubuntu）<br>1.1 安装OpenVPN 所需插件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install openssl</div><div class="line">$ sudo apt-get install libssl-dev</div><div class="line">$ sudo apt-get install libpam0g-dev</div><div class="line">$ sudo apt-get install liblzo2-dev</div></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>1.2 安装OpenVPN<br>注:以下安装方式任选一种,推荐apt-get方式安装<br>1.2.1 apt-get安装OpenVPN<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$apt-get install openvpn</div><div class="line">$cd /etc/openvpn</div><div class="line">$mkdir conf log</div></pre></td></tr></table></figure></p>
+<p>1.2.2 源码安装OpenVPN（建议使用2.2.2版本）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ wget http://swupdate.openvpn.org/community/releases/openvpn-2.2.2.tar.gz  </div><div class="line">$ tar -zxvf openvpn-2.2.2.tar.gz  </div><div class="line">$ mkdir /data/openvpn &amp;&amp; cd openvpn-2.2.2  </div><div class="line">$ ./configure --enable-password-save --prefix=/etc/openvpn  </div><div class="line">$ make &amp;&amp; sudo make install</div></pre></td></tr></table></figure></p>
+<p>注：–enable-password-save该选项是避免手工输入客户端密码；–prefix选项是真正的安装路径<br>1.3 开启内核转发并配置源地址路由<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ echo &quot;1&quot; &gt; /proc/sys/net/ipv4/ip_forward </div><div class="line">$ iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE</div></pre></td></tr></table></figure></p>
+<p>1.4 服务端配置<br>1.4.1 生成密钥<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ cd openvpn-2.2.2/easy-rsa/2.0 </div><div class="line">$ source ./vars     # 在此之前，可以修改vars文件对国家省份等修改;配置dh的位数(默认是1024，可以改成export KEY_SIZE=2048)和下文生成的dh2048.pem相对应</div><div class="line">$ ./clean-all </div><div class="line">$ ./build-ca </div><div class="line">$ ./build-key-server server # 产生服务器证书，此处的server是文件名参数，可以任意修改。</div><div class="line">$ ./build-key-pass client1 # 生成客户端key，pass表示需要输入一个密码作为客户端启动时的凭证； ./build-key则不需要输入密码</div><div class="line">$ ./build-dh # 产生Diffie Hellman参数</div><div class="line">至此一个客户端所需的证书已经完毕，都在easy-rsa/2.0/keys文件夹下面，其中ca.crt server.crt server.csr server.key dh1024.pem是服务端所需证书文件，ca.crt ca.key client1.crt client1.csr client1.key是客户端所需证书文件。</div><div class="line">注：可以继续使用./build-key产生更多客户端证书,一个客户端证书只能同时用于一个客户端连接。</div></pre></td></tr></table></figure></p>
+<p>1.4.2 服务端配目录及文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ cd openvpn &amp;&amp; mkdir conf # openvpn就是第2步中openvpn的安装目录 </div><div class="line">$ cp openvpn-2.2.2/sample-config-files/server.conf conf/</div><div class="line">$ cp openvpn-2.2.2/easy-rsa/2.0/keys/&#123;ca.crt,server.crt,server.csr,server.key,dh1024.pem&#125; conf/ # 拷贝openvpn-2.2.2/easy-rsa/2.0/keys/下的相关证书文件到openvpn/conf/目录下，注意:2048位的key则是dh2048.pem; 1024位的key则是dh1024.pem</div></pre></td></tr></table></figure></p>
+<p>1.4.3 服务端配置文件参数指定<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ vim conf/server.conf</div><div class="line">dev tap</div><div class="line">proto tcp</div><div class="line">port 1194</div><div class="line">ca /path/to/openvpn/conf/ca.crt</div><div class="line">cert /path/to/openvpn/conf/server.crt</div><div class="line">key /path/to/openvpn/conf/server.key</div><div class="line">dh /path/to/openvpn/conf/dh1024.pem</div><div class="line">user nobody</div><div class="line">group nogroup</div><div class="line">server 10.8.0.0 255.255.255.0     # 分配给clinet的ip段</div><div class="line">second time period</div><div class="line">keepalive 10 120                            # 每10秒ping一次，120秒内客户端没有动作就断开连接</div><div class="line">persist-key</div><div class="line">persist-tun</div><div class="line">verb 4</div><div class="line">log-append /path/to/openvpn/log/openvpn.log</div><div class="line">status /path/to/openvpn/log/openvpn-status.log</div><div class="line">client-to-client</div><div class="line">crl-verify /path/to/openvpn/conf/crl.pem            # 客户端证书连接限制</div><div class="line">comp-lzo</div></pre></td></tr></table></figure></p>
+<p>###1.5 启动OpenVPN服务端<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo /path/to/openvpn/sbin/openvpn --config /path/to/openvpn/conf/server.conf --daemon</div></pre></td></tr></table></figure></p>
+<p>###1.6 检查验证<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ifconfig|grep inet|grep 10.8.0.1  </div><div class="line">inet 10.8.0.1 netmask 0xffffff00 broadcast 10.8.0.255</div></pre></td></tr></table></figure></p>
+<p>注：得到IP为：10.8.0.1 则说明VPN服务端配置成功  </p>
+<p>###1.7 设置OpenVPN服务端开机启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vim /etc/rc.local</div><div class="line">iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE</div><div class="line">/path/to/openvpn/sbin/openvpn --config /path/to/openvpn/conf/server.conf --daemon</div></pre></td></tr></table></figure></p>
+<p>##2 OpenVPN 客户端部署(MAC系统)  </p>
+<p>###2.1 安装OpenVPN 所需插件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo brew install openssl</div></pre></td></tr></table></figure></p>
+<p>###2.2 安装OpenVPN<br>注:以下安装方式任选一种,推荐Brew方式安装</p>
+<p>####2.2.1 Brew 安装<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">直接brew安装(推荐)</div><div class="line">$brew install openvpn</div><div class="line">$cd /usr/local/Cellar/openvpn/2.3.11_1</div><div class="line">$mkdir conf log</div><div class="line">$ln -s /usr/local/Cellar/openvpn/2.3.11_1/sbin/openvpn /usr/local/bin/openvpn</div></pre></td></tr></table></figure></p>
+<p>####2.2.2 源码安装（建议使用2.2.2版本）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ wget http://swupdate.openvpn.org/community/releases/openvpn-2.2.2.tar.gz  </div><div class="line">$ tar -zxvf openvpn-2.2.2.tar.gz  </div><div class="line">$ mkdir /data/openvpn &amp;&amp; cd openvpn-2.2.2  </div><div class="line">$ ./configure --enable-password-save --prefix=/etc/openvpn  </div><div class="line">$ make &amp;&amp; sudo make install</div></pre></td></tr></table></figure></p>
+<p>注：–enable-password-save该选项是避免手工输入客户端密码；–prefix选项是真正的安装路径</p>
+<p>###2.3 服务端生成客户端所需密钥(客户端部署可忽略此步骤) </p>
+<p>####2.3.1 服务端连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">服务端所在机器：xxx.xxx.xxx.xxx  </div><div class="line">$ssh root@xxx.xxx.xxx.xxx  #连接方式</div><div class="line">$cd /media/openvpn/  服务端所在路径</div><div class="line">$cd /media/openvpn-2.2.2/easy-rsa/2.0  生成密钥所需路径</div></pre></td></tr></table></figure></p>
+<p>####2.3.2 生成密钥<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ source ./vars  </div><div class="line">$ ./build-key-pass client-A    #此处设置密码为：openvpn123</div></pre></td></tr></table></figure></p>
+<p>注：生成客户端key，pass表示需要输入一个密码作为客户端启动时的凭证； ./build-key则不需要输入密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./build-dh</div></pre></td></tr></table></figure></p>
+<p>####2.3.3设置客户端密钥验证信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vim /media/openvpn/conf/ccd/client-A  </div><div class="line">ifconfig-push 10.8.0.119 255.255.255.0</div></pre></td></tr></table></figure></p>
+<p>注：此处的验证信息文件名需要和生成密钥时输入的名字保持一致;<br>10.8.0.119 指客户端被虚拟出来的IP  </p>
+<p>###2.4 客户端配置  </p>
+<p>####2.4.1 拷贝密钥到客户端<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$scp root@xxx.xxx.xxx.xxx:/media/openvpn-2.2.2/easy-rsa/2.0/keys/&#123;ca.crt,ca.key,client-A.crt,client-A.csr,client-A.key&#125;   /usr/local/Cellar/openvpn/2.3.11_1/conf/</div><div class="line">注:密钥可以由维护人员发放,联系刘东;</div></pre></td></tr></table></figure></p>
+<p>####2.4.2 配置客户端密码文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vim /usr/local/Cellar/openvpn/2.3.11_1/conf/password.txt  </div><div class="line">openvpn123</div></pre></td></tr></table></figure></p>
+<p>注:客户端密码文件和服务端生成密钥时输入的密码一致</p>
+<p>####2.4.3 客户端配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">$ vim /usr/local/Cellar/openvpn/2.3.11_1/conf/client.conf  </div><div class="line">client  </div><div class="line">dev tap  </div><div class="line">proto tcp  </div><div class="line">remote xxx.xxx.xxx.xxx 1194   #指定服务端外网IP及端口</div><div class="line">nobind  </div><div class="line">user nobody  </div><div class="line">group nogroup  </div><div class="line">ca /usr/local/Cellar/openvpn/2.3.11_1/conf/ca.crt  </div><div class="line">cert /usr/local/Cellar/openvpn/2.3.11_1/conf/client-A.crt  </div><div class="line">key /usr/local/Cellar/openvpn/2.3.11_1/conf/client-A.key  </div><div class="line">ping 15  </div><div class="line">ping-restart 45  </div><div class="line">ping-timer-rem  </div><div class="line">persist-key  </div><div class="line">persist-tun  </div><div class="line">ns-cert-type server  </div><div class="line">comp-lzo  </div><div class="line">verb 4  </div><div class="line">log-append /usr/local/Cellar/openvpn/2.3.11_1/log/openvpn.log  </div><div class="line">status /usr/local/Cellar/openvpn/2.3.11_1/log/openvpn-status.log  </div><div class="line">tcp-queue-limit 4096 # 256  </div><div class="line">bcast-buffers 4096</div></pre></td></tr></table></figure></p>
+<p>###2.5 启动客户端  </p>
+<p>####2.5.1 命令行启动OpenVPN<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo /usr/local/bin/openvpn --config /usr/local/Cellar/openvpn/2.3.11_1/conf/client.conf --askpass /usr/local/Cellar/openvpn/2.3.11_1/conf/password.txt --daemon</div></pre></td></tr></table></figure></p>
+<p>####2.5.2 GUI启动OpenVPN</p>
+<ul>
+<li>下载Tunnelblick客户端<br>直接官网下载: <a href="https://tunnelblick.net/downloads.html" target="_blank" rel="external">https://tunnelblick.net/downloads.html</a>    </li>
+<li>安装Tunnelblick客户端<br>Tunnelblick具体安装使用流程见：<a href="http://blog.csdn.net/sinat_25471067/article/details/43482837" target="_blank" rel="external">Mac系统Tunnelblick下载以及安装流程</a></li>
+</ul>
+<p>###2.6 检查验证<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ifconfig|grep inet|grep 10.8.0.119  </div><div class="line">inet 10.8.0.119 netmask 0xffffff00 broadcast 10.8.0.255</div></pre></td></tr></table></figure></p>
+<p>注：得到IP为：10.8.0.x 则说明VPN客户端配置成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ping 10.8.0.1    #检查是否能ping通内网等机器</div></pre></td></tr></table></figure></p>
+<p>###2.7 服务加入开机自启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vim /etc/rc.local</div><div class="line">/usr/local/bin/openvpn --config /usr/local/Cellar/openvpn/2.3.11_1/conf/client.conf --askpass /usr/local/Cellar/openvpn/2.3.11_1/conf/password.txt --daemon</div></pre></td></tr></table></figure></p>
+<p>##3 OpenVPN 客户端部署(Ubuntu系统)  </p>
+<p>###3.1 安装OpenVPN 所需插件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install openssl</div><div class="line">$ sudo apt-get install libssl-dev</div><div class="line">$ sudo apt-get install libpam0g-dev</div><div class="line">$ sudo apt-get install liblzo2-dev</div></pre></td></tr></table></figure></p>
+<p>###3.2 安装OpenVPN<br>注:以下安装方式任选一种,推荐apt-get方式安装</p>
+<p>####3.2.1 apt-get安装OpenVPN<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$apt-get install openvpn</div><div class="line">$cd /etc/openvpn</div><div class="line">$mkdir conf log</div></pre></td></tr></table></figure></p>
+<p>####3.2.2 源码安装OpenVPN（建议使用2.2.2版本）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ wget http://swupdate.openvpn.org/community/releases/openvpn-2.2.2.tar.gz  </div><div class="line">$ tar -zxvf openvpn-2.2.2.tar.gz  </div><div class="line">$ mkdir /data/openvpn &amp;&amp; cd openvpn-2.2.2  </div><div class="line">$ ./configure --enable-password-save --prefix=/etc/openvpn  </div><div class="line">$ make &amp;&amp; sudo make install</div></pre></td></tr></table></figure></p>
+<p>注：–enable-password-save该选项是避免手工输入客户端密码；–prefix选项是真正的安装路径</p>
+<p>###3.3 服务端生成客户端所需密钥(客户端部署可忽略此步骤) </p>
+<p>####3.3.1 服务端连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">服务端所在机器：xxx.xxx.xxx.xxx  </div><div class="line">$ssh root@xxx.xxx.xxx.xxx  #连接方式</div><div class="line">$cd /media/openvpn/  服务端所在路径</div><div class="line">$cd /media/openvpn-2.2.2/easy-rsa/2.0  生成密钥所需路径</div></pre></td></tr></table></figure></p>
+<p>####3.3.2 生成密钥<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ source ./vars  </div><div class="line">$ ./build-key-pass client-B    #此处设置密码为：openvpn123</div></pre></td></tr></table></figure></p>
+<p>注：生成客户端key，pass表示需要输入一个密码作为客户端启动时的凭证； ./build-key则不需要输入密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./build-dh</div></pre></td></tr></table></figure></p>
+<p>####3.3.3设置客户端密钥验证信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vim /media/openvpn/conf/ccd/client-B  </div><div class="line">ifconfig-push 10.8.0.120 255.255.255.0</div></pre></td></tr></table></figure></p>
+<p>注：此处的验证信息文件名需要和生成密钥时输入的名字保持一致;<br>10.8.0.120 指客户端被虚拟出来的IP  </p>
+<p>###3.4 客户端配置  </p>
+<p>####3.4.1 拷贝密钥到客户端<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$scp root@xxx.xxx.xxx.xxx:/media/openvpn-2.2.2/easy-rsa/2.0/keys/&#123;ca.crt,ca.key,client-B.crt,client-B.csr,client-B.key&#125;   /etc/openvpn/conf</div><div class="line">注:密钥可以由维护人员发放,联系刘东;</div></pre></td></tr></table></figure></p>
+<p>####3.4.2 配置客户端密码文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vim /etc/openvpn/conf/password.txt  </div><div class="line">openvpn123</div></pre></td></tr></table></figure></p>
+<p>注:客户端密码文件和服务端生成密钥时输入的密码一致</p>
+<p>####3.4.3 客户端配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">$ vim /etc/openvpn/conf/client.conf  </div><div class="line">client  </div><div class="line">dev tap  </div><div class="line">proto tcp  </div><div class="line">remote xxx.xxx.xxx.xxx 1194   #指定服务端外网IP及端口</div><div class="line"></div><div class="line">nobind  </div><div class="line">user nobody  </div><div class="line">group nogroup  </div><div class="line">ca /etc/openvpn/conf/ca.crt  </div><div class="line">cert /etc/openvpn/conf/client-B.crt  </div><div class="line">key /etc/openvpn/conf/client-B.key  </div><div class="line"></div><div class="line">ping 15  </div><div class="line"></div><div class="line">ping-restart 45  </div><div class="line">ping-timer-rem  </div><div class="line">persist-key  </div><div class="line">persist-tun  </div><div class="line">ns-cert-type server  </div><div class="line">comp-lzo  </div><div class="line"></div><div class="line">verb 4  </div><div class="line">log-append /etc/openvpn/log/openvpn.log  </div><div class="line">status /etc/openvpn/log/openvpn-status.log  </div><div class="line"></div><div class="line">tcp-queue-limit 4096 # 256  </div><div class="line">bcast-buffers 4096</div></pre></td></tr></table></figure></p>
+<p>###3.5 启动客户端<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo openvpn --config /etc/openvpn/conf/client.conf --askpass /etc/openvpn/conf/password.txt --daemon</div></pre></td></tr></table></figure></p>
+<p>###3.6 检查验证<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ifconfig|grep inet|grep 10.8.0.120  </div><div class="line">inet 10.8.0.120 netmask 0xffffff00 broadcast 10.8.0.255</div></pre></td></tr></table></figure></p>
+<p>注：得到IP为：10.8.0.x 则说明VPN客户端配置成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ping 10.8.0.1    #检查是否能ping通内网等机器</div></pre></td></tr></table></figure></p>
+<p>###3.7 服务加入开机自启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vim /etc/rc.local</div><div class="line">openvpn --config /etc/openvpn/conf/client.conf --askpass /etc/openvpn/conf/password.txt --daemon</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://hopperclouds.github.io/2016/09/08/OpenVPN服务部署使用/" data-id="ciu3ixcap0005rjsq5k47hrvg" class="article-share-link" data-share="baidu" data-title="OpenVPN服务部署使用">分享到</a>
+      
+
+      
+        <a href="http://hopperclouds.github.io/2016/09/08/OpenVPN服务部署使用/#disqus_thread" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/运维/">运维</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          Nodejs ORM框架Sequelizejs快速入门
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/08/django自定义storage/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">django自定义storage</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/UML/">UML</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/django/">django</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/招聘/">招聘</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/搜索引擎/">搜索引擎</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ES6/">ES6</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/">HTTP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kxrr/">Kxrr</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nodejs/">Nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NotImplemented/">NotImplemented</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ORM/">ORM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Webpack/">Webpack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache-lucene/">apache lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/">django</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/">javascript</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyspark/">pyspark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/str/">str</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unicode-literals/">unicode_literals</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/其他/">其他</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/招聘/">招聘</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/搜索引擎/">搜索引擎</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/经验总结/">经验总结</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/设计模式/">设计模式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/运维/">运维</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/面向对象/">面向对象</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Kxrr/" style="font-size: 10px;">Kxrr</a> <a href="/tags/Nodejs/" style="font-size: 10px;">Nodejs</a> <a href="/tags/NotImplemented/" style="font-size: 10px;">NotImplemented</a> <a href="/tags/ORM/" style="font-size: 10px;">ORM</a> <a href="/tags/Python/" style="font-size: 20px;">Python</a> <a href="/tags/Webpack/" style="font-size: 10px;">Webpack</a> <a href="/tags/apache-lucene/" style="font-size: 10px;">apache lucene</a> <a href="/tags/django/" style="font-size: 10px;">django</a> <a href="/tags/javascript/" style="font-size: 15px;">javascript</a> <a href="/tags/pyspark/" style="font-size: 10px;">pyspark</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/str/" style="font-size: 10px;">str</a> <a href="/tags/unicode-literals/" style="font-size: 10px;">unicode_literals</a> <a href="/tags/其他/" style="font-size: 10px;">其他</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/技术/" style="font-size: 10px;">技术</a> <a href="/tags/招聘/" style="font-size: 10px;">招聘</a> <a href="/tags/搜索引擎/" style="font-size: 10px;">搜索引擎</a> <a href="/tags/经验总结/" style="font-size: 10px;">经验总结</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/运维/" style="font-size: 15px;">运维</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/12/Nodejs-ORM框架Sequelizejs快速入门/">Nodejs ORM框架Sequelizejs快速入门</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/08/OpenVPN服务部署使用/">OpenVPN服务部署使用</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/08/django自定义storage/">django自定义storage</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/07/从程序员到架构师的成长之路/">从程序员到架构师的成长之路</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/06/react入门介绍/">react入门介绍</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">友情链接</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="" target="_blank">聘宝产品</a>
+          </li>
+        
+          <li>
+            <a href="" target="_blank">runforever github</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 聘宝研发<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'hopperclouds';
+  
+  var disqus_url = 'http://hopperclouds.github.io/2016/09/08/OpenVPN服务部署使用/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+</div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
