@@ -9,10 +9,7 @@
   <meta name="description" content="一、总论根据http://lucene.apache.org/java/docs/index.html定义：
 Lucene是一个高效的，基于Java的全文检索库。
 所以在了解Lucene之前要费一番工夫了解一下全文检索。
-那么什么叫做全文检索呢？这要从我们生活中的数据说起。
-
-我们生活中的数据总体分为两种：结构化数据和非结构化数据。
-结构化数据：指具有固定格式或有限长度的数据，如数据库，元数据等">
+那么什么叫做全文检索呢？这要从我们生活中的数据说起。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Lucene学习总结之一：全文检索的基本原理">
 <meta property="og:url" content="http://hopperclouds.github.io/2016/08/31/Lucene学习总结之一/index.html">
@@ -20,10 +17,7 @@ Lucene是一个高效的，基于Java的全文检索库。
 <meta property="og:description" content="一、总论根据http://lucene.apache.org/java/docs/index.html定义：
 Lucene是一个高效的，基于Java的全文检索库。
 所以在了解Lucene之前要费一番工夫了解一下全文检索。
-那么什么叫做全文检索呢？这要从我们生活中的数据说起。
-
-我们生活中的数据总体分为两种：结构化数据和非结构化数据。
-结构化数据：指具有固定格式或有限长度的数据，如数据库，元数据等">
+那么什么叫做全文检索呢？这要从我们生活中的数据说起。">
 <meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476067617550.png">
 <meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068056882.png">
 <meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068116611.png">
@@ -39,16 +33,13 @@ Lucene是一个高效的，基于Java的全文检索库。
 <meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068786042.png">
 <meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068817371.png">
 <meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068846590.png">
-<meta property="og:updated_time" content="2016-10-11T10:57:56.000Z">
+<meta property="og:updated_time" content="2016-10-11T11:00:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lucene学习总结之一：全文检索的基本原理">
 <meta name="twitter:description" content="一、总论根据http://lucene.apache.org/java/docs/index.html定义：
 Lucene是一个高效的，基于Java的全文检索库。
 所以在了解Lucene之前要费一番工夫了解一下全文检索。
-那么什么叫做全文检索呢？这要从我们生活中的数据说起。
-
-我们生活中的数据总体分为两种：结构化数据和非结构化数据。
-结构化数据：指具有固定格式或有限长度的数据，如数据库，元数据等">
+那么什么叫做全文检索呢？这要从我们生活中的数据说起。">
 <meta name="twitter:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476067617550.png">
   
     <link rel="alternative" href="/atom.xml" title="聘宝研发" type="application/atom+xml">
@@ -132,12 +123,11 @@ Lucene是一个高效的，基于Java的全文检索库。
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
-<h3 id="一、总论"><a href="#一、总论" class="headerlink" title="一、总论"></a><strong>一、总论</strong></h3><p>根据<a href="http://lucene.apache.org/java/docs/index.html" target="_blank" rel="external">http://lucene.apache.org/java/docs/index.html</a>定义：</p>
+        <h3 id="一、总论"><a href="#一、总论" class="headerlink" title="一、总论"></a><strong>一、总论</strong></h3><p>根据<a href="http://lucene.apache.org/java/docs/index.html" target="_blank" rel="external">http://lucene.apache.org/java/docs/index.html</a>定义：</p>
 <p><strong>Lucene</strong>是一个高效的，基于<strong>Java</strong>的全文检索库。</p>
 <p>所以在了解Lucene之前要费一番工夫了解一下全文检索。</p>
 <p>那么什么叫做全文检索呢？这要从我们生活中的数据说起。</p>
-<!--more-->
+<a id="more"></a>
 <p>我们生活中的数据总体分为两种：结构化数据和非结构化数据。</p>
 <p><strong>结构化数据</strong>：指具有固定格式或有限长度的数据，如数据库，元数据等。<br><strong>非结构化数据</strong>：指不定长或无固定格式的数据，如邮件，word文档等。<br>当然有的地方还会提到第三种，半结构化数据，如XML，HTML等，当根据需要可按结构化数据来处理，也可抽取出纯文本按非结构化数据来处理。</p>
 <p>非结构化数据又一种叫法叫全文数据。</p>
@@ -351,7 +341,7 @@ Lucene是一个高效的，基于Java的全文检索库。
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://hopperclouds.github.io/2016/08/31/Lucene学习总结之一/" data-id="ciu5dk5nj0006jxsq9uziyr8g" class="article-share-link" data-share="baidu" data-title="Lucene学习总结之一：全文检索的基本原理">分享到</a>
+        <a data-url="http://hopperclouds.github.io/2016/08/31/Lucene学习总结之一/" data-id="ciu5dmbcq0006mnsqdewe2cyb" class="article-share-link" data-share="baidu" data-title="Lucene学习总结之一：全文检索的基本原理">分享到</a>
       
 
       
