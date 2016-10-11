@@ -4,17 +4,52 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>聘宝研发</title>
+  <title>Lucene学习总结之一：全文检索的基本原理 | 聘宝研发</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="做有趣的事">
-<meta property="og:type" content="website">
-<meta property="og:title" content="聘宝研发">
-<meta property="og:url" content="http://hopperclouds.github.io/page/2/index.html">
+  <meta name="description" content="一、总论根据http://lucene.apache.org/java/docs/index.html定义：
+Lucene是一个高效的，基于Java的全文检索库。
+所以在了解Lucene之前要费一番工夫了解一下全文检索。
+那么什么叫做全文检索呢？这要从我们生活中的数据说起。
+
+我们生活中的数据总体分为两种：结构化数据和非结构化数据。
+结构化数据：指具有固定格式或有限长度的数据，如数据库，元数据等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lucene学习总结之一：全文检索的基本原理">
+<meta property="og:url" content="http://hopperclouds.github.io/2016/08/31/Lucene学习总结之一/index.html">
 <meta property="og:site_name" content="聘宝研发">
-<meta property="og:description" content="做有趣的事">
+<meta property="og:description" content="一、总论根据http://lucene.apache.org/java/docs/index.html定义：
+Lucene是一个高效的，基于Java的全文检索库。
+所以在了解Lucene之前要费一番工夫了解一下全文检索。
+那么什么叫做全文检索呢？这要从我们生活中的数据说起。
+
+我们生活中的数据总体分为两种：结构化数据和非结构化数据。
+结构化数据：指具有固定格式或有限长度的数据，如数据库，元数据等">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476067617550.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068056882.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068116611.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068159790.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068226446.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068267314.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068577461.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068607202.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068635910.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068684024.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068727090.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068753079.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068786042.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068817371.png">
+<meta property="og:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476068846590.png">
+<meta property="og:updated_time" content="2016-10-11T10:57:56.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="聘宝研发">
-<meta name="twitter:description" content="做有趣的事">
+<meta name="twitter:title" content="Lucene学习总结之一：全文检索的基本原理">
+<meta name="twitter:description" content="一、总论根据http://lucene.apache.org/java/docs/index.html定义：
+Lucene是一个高效的，基于Java的全文检索库。
+所以在了解Lucene之前要费一番工夫了解一下全文检索。
+那么什么叫做全文检索呢？这要从我们生活中的数据说起。
+
+我们生活中的数据总体分为两种：结构化数据和非结构化数据。
+结构化数据：指具有固定格式或有限长度的数据，如数据库，元数据等">
+<meta name="twitter:image" content="http://img.pinbot.me:8080/uploads/2016/10/10/blob_1476067617550.png">
   
     <link rel="alternative" href="/atom.xml" title="聘宝研发" type="application/atom+xml">
   
@@ -71,172 +106,7 @@
   </div>
 </header>
     <div class="outer">
-      <section id="main">
-  
-    <article id="post-JavaScript之递归" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/09/02/JavaScript之递归/" class="article-date">
-  <time datetime="2016-09-01T16:52:45.000Z" itemprop="datePublished">2016-09-02</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/blog/">blog</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/02/JavaScript之递归/">JavaScript之递归</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>作者：纯利</p>
-<p>那么什么叫递归呢？所谓<strong>递归函数就是在函数体内调用本函数</strong>。最简单的例子就是计算阶乘。0和1的阶乘都会被定义为1，更大的数的阶乘是通过计算1<em>1</em>…来求得的，每次增加1，直至达到要计算阶乘的那个数。</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/09/02/JavaScript之递归/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://hopperclouds.github.io/2016/09/02/JavaScript之递归/" data-id="ciu5dj5mg0005fgsqkpzx2e9x" class="article-share-link" data-share="baidu" data-title="JavaScript之递归">分享到</a>
-      
-
-      
-        <a href="http://hopperclouds.github.io/2016/09/02/JavaScript之递归/#disqus_thread" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-数据处理-分析-可视化飞艇-zeppelin-介绍" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/" class="article-date">
-  <time datetime="2016-08-31T17:35:55.000Z" itemprop="datePublished">2016-09-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/大数据/">大数据</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/">数据处理/分析/可视化飞艇(zeppelin)介绍</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>author: likaiguo</p>
-<h1 id="Zeppelin-飞艇"><a href="#Zeppelin-飞艇" class="headerlink" title="Zeppelin(飞艇)"></a>Zeppelin(飞艇)</h1><p>Zeppelin思维导图</p>
-<p><img src="http://img.pinbot.me:8080/uploads/2016/9/1/blob_1472665482681.png" alt="2016/9/1/截图" title="blob_1472665482681.png"></p>
-<p>推荐查看思维导图中的各个链接,尤其是<a href="https://zeppelin.apache.org/docs/0.6.1/">官方文档</a>和<a href="">中文翻译</a>.</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://hopperclouds.github.io/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/" data-id="ciu5dj5nk001afgsqs8y3qd61" class="article-share-link" data-share="baidu" data-title="数据处理/分析/可视化飞艇(zeppelin)介绍">分享到</a>
-      
-
-      
-        <a href="http://hopperclouds.github.io/2016/09/01/数据处理-分析-可视化飞艇-zeppelin-介绍/#disqus_thread" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pyspark/">pyspark</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-认识Apache Lucene" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/08/31/认识Apache Lucene/" class="article-date">
-  <time datetime="2016-08-31T10:00:04.000Z" itemprop="datePublished">2016-08-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/搜索引擎/">搜索引擎</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/31/认识Apache Lucene/">认识Apache Lucene</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>&emsp;&emsp;&emsp;&emsp;为了更深入地理解ElasticSearch的工作原理，特别是索引和查询这两个<br>过程，理解Lucene的工作原理至关重要。本质上，ElasticSearch是用Lucene<br>来实现索引的查询功能的。如果读者没有用过Lucene，下面的几个部分将<br>为您介绍Lucene的基本概念。</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/08/31/认识Apache Lucene/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://hopperclouds.github.io/2016/08/31/认识Apache Lucene/" data-id="ciu5dj5no001gfgsq1vzqikwr" class="article-share-link" data-share="baidu" data-title="认识Apache Lucene">分享到</a>
-      
-
-      
-        <a href="http://hopperclouds.github.io/2016/08/31/认识Apache Lucene/#disqus_thread" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apache-lucene/">apache lucene</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/搜索引擎/">搜索引擎</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Lucene学习总结之一" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-Lucene学习总结之一" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/08/31/Lucene学习总结之一/" class="article-date">
   <time datetime="2016-08-31T10:00:04.000Z" itemprop="datePublished">2016-08-31</time>
@@ -253,8 +123,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/31/Lucene学习总结之一/">Lucene学习总结之一：全文检索的基本原理</a>
+    <h1 class="article-title" itemprop="name">
+      Lucene学习总结之一：全文检索的基本原理
     </h1>
   
 
@@ -494,285 +364,35 @@
     </footer>
   </div>
   
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/31/认识Apache Lucene/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          认识Apache Lucene
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/31/从__str__说开去/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">从__str__说开去</div>
+    </a>
+  
+</nav>
+
+  
 </article>
 
 
-  
-    <article id="post-从__str__说开去" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/08/31/从__str__说开去/" class="article-date">
-  <time datetime="2016-08-31T08:00:00.000Z" itemprop="datePublished">2016-08-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/31/从__str__说开去/">从__str__说开去</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="str-和-repr"><a href="#str-和-repr" class="headerlink" title="__str__ 和 __repr__"></a>__str__ 和 __repr__</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p><a href="https://docs.python.org/2/reference/datamodel.html#object.__str__"><code>object.__str__</code></a>是python中一个常见的特殊方法, 会被内置函数被 <code>str</code> 和 <code>print</code> 调用。<br>常常与它一起出现的还有<a href="https://docs.python.org/2/reference/datamodel.html#object.__repr__"><code>object.__repr__</code></a>, 类似地, 它会被内置函数 <code>repr</code> 调用。</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/08/31/从__str__说开去/#more">Read More</a>
-          </p>
-        
-      
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://hopperclouds.github.io/2016/08/31/从__str__说开去/" data-id="ciu5dj5n7000wfgsqlftvyq2h" class="article-share-link" data-share="baidu" data-title="从__str__说开去">分享到</a>
-      
-
-      
-        <a href="http://hopperclouds.github.io/2016/08/31/从__str__说开去/#disqus_thread" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kxrr/">Kxrr</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/str/">str</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unicode-literals/">unicode_literals</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-前端入门之我见" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/08/30/前端入门之我见/" class="article-date">
-  <time datetime="2016-08-30T14:48:37.000Z" itemprop="datePublished">2016-08-30</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/blog/">blog</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/30/前端入门之我见/">前端入门之我见</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>作者：Adam at 2016-08-30 22:48:37</p>
-<p>这两周陆陆续续进行了两个独立的前端项目，一个是前后端分离的Angular项目，一个是ES6+Nodejs的全栈项目，前者先做，后者差不多刚完成，最明显的感觉就是写了Angular不想写JQuery，写了ES6不想写ES5。</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/08/30/前端入门之我见/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://hopperclouds.github.io/2016/08/30/前端入门之我见/" data-id="ciu5dj5ni0016fgsq4e8udbri" class="article-share-link" data-share="baidu" data-title="前端入门之我见">分享到</a>
-      
-
-      
-        <a href="http://hopperclouds.github.io/2016/08/30/前端入门之我见/#disqus_thread" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ES6/">ES6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Webpack/">Webpack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/经验总结/">经验总结</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-聘宝招聘Python实习生" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/29/聘宝招聘Python实习生/" class="article-date">
-  <time datetime="2015-09-29T02:51:04.000Z" itemprop="datePublished">2015-09-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/招聘/">招聘</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/29/聘宝招聘Python实习生/">聘宝招聘Python实习生</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="公司情况"><a href="#公司情况" class="headerlink" title="公司情况"></a>公司情况</h1><p>现在主要做的产品是 <a href="http://www.pinbot.me/">http://www.pinbot.me/</a> ,已经拿到A轮</p>
-<p>坐标：四川成都高新区府城大道399天府新谷9号楼二单元1505成都浩泊云动科技有限公司</p>
-        
-          <p class="article-more-link">
-            <a href="/2015/09/29/聘宝招聘Python实习生/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://hopperclouds.github.io/2015/09/29/聘宝招聘Python实习生/" data-id="ciu5dj5nm001cfgsqc8bvv6py" class="article-share-link" data-share="baidu" data-title="聘宝招聘Python实习生">分享到</a>
-      
-
-      
-        <a href="http://hopperclouds.github.io/2015/09/29/聘宝招聘Python实习生/#disqus_thread" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/招聘/">招聘</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-聘宝研发团队必备技能" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/24/聘宝研发团队必备技能/" class="article-date">
-  <time datetime="2015-09-24T08:09:24.000Z" itemprop="datePublished">2015-09-24</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/24/聘宝研发团队必备技能/">聘宝研发团队必备技能</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><a href="http://www.pinbot.me">聘宝(www.pinbot.me)</a> 立志做新一代的智能猎头，让企业招聘变得更简单，我们崇尚敏捷，崇尚开源，崇尚K.I.S.S</p>
-        
-          <p class="article-more-link">
-            <a href="/2015/09/24/聘宝研发团队必备技能/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://hopperclouds.github.io/2015/09/24/聘宝研发团队必备技能/" data-id="ciu5dj5nq001ifgsqf8h4hahi" class="article-share-link" data-share="baidu" data-title="聘宝研发团队必备技能">分享到</a>
-      
-
-      
-        <a href="http://hopperclouds.github.io/2015/09/24/聘宝研发团队必备技能/#disqus_thread" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/运维/">运维</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-使用Hexo作为博客" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/09/24/使用Hexo作为博客/" class="article-date">
-  <time datetime="2015-09-24T07:29:25.000Z" itemprop="datePublished">2015-09-24</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/其他/">其他</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/24/使用Hexo作为博客/">使用Hexo作为博客</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="安装和部署请参考下面或自行google"><a href="#安装和部署请参考下面或自行google" class="headerlink" title="安装和部署请参考下面或自行google"></a>安装和部署请参考下面或自行google</h2><ol>
-<li><a href="https://hexo.io/">官网</a></li>
-<li><a href="http://wsgzao.github.io/post/hexo-guide/">http://wsgzao.github.io/post/hexo-guide/</a></li>
-</ol>
-        
-          <p class="article-more-link">
-            <a href="/2015/09/24/使用Hexo作为博客/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://hopperclouds.github.io/2015/09/24/使用Hexo作为博客/" data-id="ciu5dj5nc000zfgsqtfojs7yh" class="article-share-link" data-share="baidu" data-title="使用Hexo作为博客">分享到</a>
-      
-
-      
-        <a href="http://hopperclouds.github.io/2015/09/24/使用Hexo作为博客/#disqus_thread" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/其他/">其他</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开始/">开始</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-  
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-    </nav>
-  
+  </section>
 </section>
       
       <aside id="sidebar">
@@ -895,11 +515,13 @@
 <script>
   var disqus_shortname = 'hopperclouds';
   
+  var disqus_url = 'http://hopperclouds.github.io/2016/08/31/Lucene学习总结之一/';
+  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>
