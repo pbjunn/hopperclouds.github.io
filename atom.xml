@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://hopperclouds.github.io/"/>
-  <updated>2016-10-11T10:57:10.000Z</updated>
+  <updated>2016-10-14T02:36:18.000Z</updated>
   <id>http://hopperclouds.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://hopperclouds.github.io/2016/10/10/Docker%E5%AD%A6%E4%B9%A0%E4%B9%8B%E8%B7%AF/"/>
     <id>http://hopperclouds.github.io/2016/10/10/Docker学习之路/</id>
     <published>2016-10-10T12:00:00.000Z</published>
-    <updated>2016-10-11T10:57:10.000Z</updated>
+    <updated>2016-10-14T02:36:18.000Z</updated>
     
     <content type="html"><![CDATA[<p>作者：liudong</p>
 <h2 id="Docker简介"><a href="#Docker简介" class="headerlink" title="Docker简介"></a>Docker简介</h2><h3 id="Docker是什么？"><a href="#Docker是什么？" class="headerlink" title="Docker是什么？"></a>Docker是什么？</h3><p>Docker 是一个开源项目,Go 语言实现,遵从了 Apache 2.0 协议，项目代码在 GitHub 上进行维护。Docker 项目的目标是实现轻量级的操作系统虚拟化解决方案。Docker 的基础是 Linux 容器（LXC）等技术。</p>
@@ -80,11 +80,11 @@
 <p>容器是从镜像创建的运行实例。它可以被启动、开始、停止、删除。每个容器都是相互隔离的、保证安全的平台。</p>
 <p>可以把容器看做是一个简易版的 Linux 环境（包括root用户权限、进程空间、用户空间和网络空间等）和运行在其中的应用程序。</p>
 <p>*注：镜像是只读的，容器在启动的时候创建一层可写层作为最上层。</p>
-<h5 id="新建并后台启动容器"><a href="#新建并后台启动容器" class="headerlink" title="新建并后台启动容器"></a>新建并后台启动容器</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run -tid ubuntu:14.04 /bin/bash</div><div class="line">注：-t 选项让Docker分配一个伪终端（pseudo-tty）并绑定到容器的标准输入上， -i 则让容器的标准输入保持打开，-d 让容器进入后台运行.</div></pre></td></tr></table></figure>
+<h5 id="新建并后台启动容器"><a href="#新建并后台启动容器" class="headerlink" title="新建并后台启动容器"></a>新建并后台启动容器</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run -tid ubuntu /bin/bash</div><div class="line">注：-t 选项让Docker分配一个伪终端（pseudo-tty）并绑定到容器的标准输入上， -i 则让容器的标准输入保持打开，-d 让容器进入后台运行.</div><div class="line">$ sudo docker ps</div><div class="line">CONTAINER ID        IMAGE                      COMMAND                  CREATED             STATUS                   PORTS                     NAMES</div><div class="line">b548b2d4a537        ubuntu                     &quot;/bin/bash&quot;              11 seconds ago      Up 10 seconds                                   zen_engelbart</div></pre></td></tr></table></figure>
 <p>docker run 来创建容器时，Docker 在后台运行的标准操作包括：<br>检查本地是否存在指定的镜像，不存在就从公有仓库下载<br>利用镜像创建并启动一个容器<br>分配一个文件系统，并在只读的镜像层外面挂载一层可读写层<br>从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去<br>从地址池配置一个 ip 地址给容器<br>执行用户指定的应用程序<br>执行完毕后容器被终止</p>
 <p>查看docker容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo docker ps</div></pre></td></tr></table></figure></p>
 <p>启动已经停止的容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo docker start ubuntu:14.04</div></pre></td></tr></table></figure></p>
-<p>docker自带命令进入容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo docker attach ubuntu  #当退出容器后，容器会关闭</div><div class="line">$ docker exec -it ubuntu     #进入已经开启的容器，退出后容器能继续运行</div></pre></td></tr></table></figure></p>
+<p>docker自带命令进入容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo docker attach zen_engelbart #zen_engelbart是容器名当退出容器后，容器会关闭</div><div class="line">$ docker exec -it zen_engelbart /bin/bash    #进入已经开启的容器，退出后容器能继续运行</div></pre></td></tr></table></figure></p>
 <p>第三方工具进入容器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ cd /tmp; curl https://www.kernel.org/pub/linux/utils/util-linux/v2.24/util-linux-2.24.tar.gz | tar -zxf-; cd util-linux-2.24;</div><div class="line">$ ./configure --without-ncurses</div><div class="line">$ make nsenter &amp;&amp; sudo cp nsenter /usr/local/bin</div></pre></td></tr></table></figure></p>
 <p>容器的第一个进程的 PID，可以通过下面的命令获取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ PID=$(docker inspect --format &quot;&#123;&#123; .State.Pid &#125;&#125;&quot; &lt;container&gt;)</div><div class="line">$ nsenter --target $PID --mount --uts --ipc --net --pid</div></pre></td></tr></table></figure></p>
 <p>实例演示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run -idt ubuntu</div><div class="line">243c32535da7d142fb0e6df616a3c3ada0b8ab417937c853a9e1c251f499f550</div><div class="line">$ sudo docker ps</div><div class="line">CONTAINER ID    IMAGE        COMMAND          CREATED            STATUS          PORTS             NAMES</div><div class="line">243c32535da7  ubuntu:latest &quot;/bin/bash&quot;    18 seconds ago     Up 17 seconds                  nostalgic_hypatia</div><div class="line">$ PID=$(docker-pid 243c32535da7)</div><div class="line">10981</div><div class="line">$ sudo nsenter --target 10981 --mount --uts --ipc --net --pid</div><div class="line">root@243c32535da7:/#</div></pre></td></tr></table></figure></p>
@@ -2340,11 +2340,11 @@ elixir (聘宝会考虑用它做东西)
       <category term="技术" scheme="http://hopperclouds.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
     
     
-      <category term="运维" scheme="http://hopperclouds.github.io/tags/%E8%BF%90%E7%BB%B4/"/>
-    
       <category term="javascript" scheme="http://hopperclouds.github.io/tags/javascript/"/>
     
       <category term="Python" scheme="http://hopperclouds.github.io/tags/Python/"/>
+    
+      <category term="运维" scheme="http://hopperclouds.github.io/tags/%E8%BF%90%E7%BB%B4/"/>
     
   </entry>
   
